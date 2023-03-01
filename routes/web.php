@@ -21,7 +21,7 @@ Route::get('/insert_product_variant_forcefully', 'DemoController@insert_product_
 Route::get('/update_seller_id_in_orders/{id_min}/{id_max}', 'DemoController@update_seller_id_in_orders');
 Route::get('/migrate_attribute_values', 'DemoController@migrate_attribute_values');
 
-Route::get('/refresh-csrf', function() {
+Route::get('/refresh-csrf', function () {
     return csrf_token();
 });
 
@@ -64,7 +64,7 @@ Route::get('/flash-deals', 'HomeController@all_flash_deals')->name('flash-deals'
 Route::get('/flash-deal/{slug}', 'HomeController@flash_deal_details')->name('flash-deal-details');
 
 
-Route::get('/sitemap.xml', function() {
+Route::get('/sitemap.xml', function () {
     return base_path('sitemap.xml');
 });
 
@@ -95,7 +95,7 @@ Route::post('/cart/removeFromCart', 'CartController@removeFromCart')->name('cart
 Route::post('/cart/updateQuantity', 'CartController@updateQuantity')->name('cart.updateQuantity');
 
 //Checkout Routes
-Route::group(['prefix' => 'checkout', 'middleware' => ['user', 'verified', 'unbanned']], function() {
+Route::group(['prefix' => 'checkout', 'middleware' => ['user', 'verified', 'unbanned']], function () {
     Route::get('/', 'CheckoutController@get_shipping_info')->name('checkout.shipping_info');
     Route::any('/delivery_info', 'CheckoutController@store_shipping_info')->name('checkout.store_shipping_infostore');
     Route::post('/payment_select', 'CheckoutController@store_delivery_info')->name('checkout.store_delivery_info');
@@ -154,7 +154,7 @@ Route::get('/support-policy', 'HomeController@supportpolicy')->name('supportpoli
 Route::get('/terms', 'HomeController@terms')->name('terms');
 Route::get('/privacy-policy', 'HomeController@privacypolicy')->name('privacypolicy');
 
-Route::group(['middleware' => ['user', 'verified', 'unbanned']], function() {
+Route::group(['middleware' => ['user', 'verified', 'unbanned']], function () {
     Route::get('/dashboard', 'HomeController@dashboard')->name('dashboard');
     Route::get('/profile', 'HomeController@profile')->name('profile');
     Route::post('/new-user-verification', 'HomeController@new_verify')->name('user.new.verify');
@@ -188,7 +188,7 @@ Route::group(['middleware' => ['user', 'verified', 'unbanned']], function() {
 
 Route::get('/customer_products/destroy/{id}', 'CustomerProductController@destroy')->name('customer_products.destroy');
 
-Route::group(['prefix' => 'seller', 'middleware' => ['seller', 'verified', 'user']], function() {
+Route::group(['prefix' => 'seller', 'middleware' => ['seller', 'verified', 'user']], function () {
     Route::get('/products', 'HomeController@seller_product_list')->name('seller.products');
     Route::get('/product/upload', 'HomeController@show_product_upload_form')->name('seller.products.upload');
     Route::get('/product/{id}/edit', 'HomeController@show_product_edit_form')->name('seller.products.edit');
@@ -219,7 +219,7 @@ Route::group(['prefix' => 'seller', 'middleware' => ['seller', 'verified', 'user
     Route::get('/uploads/destroy/{id}', 'AizUploadController@destroy')->name('my_uploads.destroy');
 });
 
-Route::group(['middleware' => ['auth']], function() {
+Route::group(['middleware' => ['auth']], function () {
     Route::post('/products/store/', 'ProductController@store')->name('products.store');
     Route::post('/products/update/{id}', 'ProductController@update')->name('products.update');
     Route::get('/products/destroy/{id}', 'ProductController@destroy')->name('products.destroy');
@@ -260,7 +260,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('/bulk-product-upload', 'ProductBulkUploadController@bulk_upload')->name('bulk_product_upload');
     Route::get('/product-csv-download/{type}', 'ProductBulkUploadController@import_product')->name('product_csv.download');
     Route::get('/vendor-product-csv-download/{id}', 'ProductBulkUploadController@import_vendor_product')->name('import_vendor_product.download');
-    Route::group(['prefix' => 'bulk-upload/download'], function() {
+    Route::group(['prefix' => 'bulk-upload/download'], function () {
         Route::get('/category', 'ProductBulkUploadController@pdf_download_category')->name('pdf.download_category');
         Route::get('/brand', 'ProductBulkUploadController@pdf_download_brand')->name('pdf.download_brand');
         Route::get('/seller', 'ProductBulkUploadController@pdf_download_seller')->name('pdf.download_seller');
@@ -269,10 +269,10 @@ Route::group(['middleware' => ['auth']], function() {
     //Product Export
     Route::get('/product-bulk-export', 'ProductBulkUploadController@export')->name('product_bulk_export.index');
 
-    Route::resource('digitalproducts', 'DigitalProductController');
-    Route::get('/digitalproducts/edit/{id}', 'DigitalProductController@edit')->name('digitalproducts.edit');
-    Route::get('/digitalproducts/destroy/{id}', 'DigitalProductController@destroy')->name('digitalproducts.destroy');
-    Route::get('/digitalproducts/download/{id}', 'DigitalProductController@download')->name('digitalproducts.download');
+    // Route::resource('digitalproducts', 'DigitalProductController');
+    // Route::get('/digitalproducts/edit/{id}', 'DigitalProductController@edit')->name('digitalproducts.edit');
+    // Route::get('/digitalproducts/destroy/{id}', 'DigitalProductController@destroy')->name('digitalproducts.destroy');
+    // Route::get('/digitalproducts/download/{id}', 'DigitalProductController@download')->name('digitalproducts.download');
 
     //Reports
     Route::get('/commission-log', 'ReportController@commission_history')->name('commission-log.index');
@@ -344,8 +344,8 @@ Route::get('/bkash/success', 'BkashController@success')->name('bkash.success');
 Route::get('/nagad/callback', 'NagadController@verify')->name('nagad.callback');
 
 //aamarpay
-Route::post('/aamarpay/success','AamarpayController@success')->name('aamarpay.success');
-Route::post('/aamarpay/fail','AamarpayController@fail')->name('aamarpay.fail');
+Route::post('/aamarpay/success', 'AamarpayController@success')->name('aamarpay.success');
+Route::post('/aamarpay/fail', 'AamarpayController@fail')->name('aamarpay.fail');
 
 //Authorize-Net-Payment
 Route::post('/dopay/online', 'AuthorizeNetController@handleonlinepay')->name('dopay.online');

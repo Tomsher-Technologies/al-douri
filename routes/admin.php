@@ -11,24 +11,28 @@
   |
  */
 
+use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
+
 Route::post('/update', 'UpdateController@step0')->name('update');
 Route::get('/update/step1', 'UpdateController@step1')->name('update.step1');
 Route::get('/update/step2', 'UpdateController@step2')->name('update.step2');
 
 Route::get('/admin', 'AdminController@admin_dashboard')->name('admin.dashboard')->middleware(['auth', 'admin']);
-Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function() {
+Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function () {
     //Update Routes
 
     Route::resource('categories', 'CategoryController');
-    Route::get('/categories/edit/{id}', 'CategoryController@edit')->name('categories.edit');
-    Route::get('/categories/destroy/{id}', 'CategoryController@destroy')->name('categories.destroy');
-    Route::post('/categories/featured', 'CategoryController@updateFeatured')->name('categories.featured');
+    Route::get('/categories/edit/{id}', [CategoryController::class, 'edit'])->name('categories.edit');
+    Route::get('/categories/destroy/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+    Route::post('/categories/featured', [CategoryController::class, 'updateFeatured'])->name('categories.featured');
 
     Route::resource('brands', 'BrandController');
-    Route::get('/brands/edit/{id}', 'BrandController@edit')->name('brands.edit');
-    Route::get('/brands/destroy/{id}', 'BrandController@destroy')->name('brands.destroy');
+    Route::get('/brands/edit/{id}', [BrandController::class, 'edit'])->name('brands.edit');
+    Route::get('/brands/destroy/{id}', [BrandController::class, 'destroy'])->name('brands.destroy');
 
-    Route::get('/products/admin', 'ProductController@admin_products')->name('products.admin');
+    Route::get('/products/admin', [ProductController::class, 'admin_products'])->name('products.admin');
     Route::get('/products/seller', 'ProductController@seller_products')->name('products.seller');
     Route::get('/products/all', 'ProductController@all_products')->name('products.all');
     Route::get('/products/create', 'ProductController@create')->name('products.create');
@@ -127,7 +131,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function(
     Route::get('/languages/app-translations/export/{id}', 'LanguageController@exportARBFile')->name('app-translations.export');
 
     // website setting
-    Route::group(['prefix' => 'website'], function() {
+    Route::group(['prefix' => 'website'], function () {
         Route::get('/footer', 'WebsiteController@footer')->name('website.footer');
         Route::get('/header', 'WebsiteController@header')->name('website.header');
         Route::get('/appearance', 'WebsiteController@appearance')->name('website.appearance');
@@ -193,11 +197,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function(
     Route::get('/wallet-history', 'ReportController@wallet_transaction_history')->name('wallet-history.index');
 
     //Blog Section
-    Route::resource('blog-category', 'BlogCategoryController');
-    Route::get('/blog-category/destroy/{id}', 'BlogCategoryController@destroy')->name('blog-category.destroy');
-    Route::resource('blog', 'BlogController');
-    Route::get('/blog/destroy/{id}', 'BlogController@destroy')->name('blog.destroy');
-    Route::post('/blog/change-status', 'BlogController@change_status')->name('blog.change-status');
+    // Route::resource('blog-category', 'BlogCategoryController');
+    // Route::get('/blog-category/destroy/{id}', 'BlogCategoryController@destroy')->name('blog-category.destroy');
+    // Route::resource('blog', 'BlogController');
+    // Route::get('/blog/destroy/{id}', 'BlogController@destroy')->name('blog.destroy');
+    // Route::post('/blog/change-status', 'BlogController@change_status')->name('blog.change-status');
 
     //Coupons
     Route::resource('coupon', 'CouponController');
@@ -235,14 +239,14 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function(
     Route::get('/destroy-attribute-value/{id}', 'AttributeController@destroy_attribute_value')->name('destroy-attribute-value');
 
     //Colors
-    Route::get('/colors', 'AttributeController@colors')->name('colors');
-    Route::post('/colors/store', 'AttributeController@store_color')->name('colors.store');
-    Route::get('/colors/edit/{id}', 'AttributeController@edit_color')->name('colors.edit');
-    Route::post('/colors/update/{id}', 'AttributeController@update_color')->name('colors.update');
-    Route::get('/colors/destroy/{id}', 'AttributeController@destroy_color')->name('colors.destroy');
+    // Route::get('/colors', 'AttributeController@colors')->name('colors');
+    // Route::post('/colors/store', 'AttributeController@store_color')->name('colors.store');
+    // Route::get('/colors/edit/{id}', 'AttributeController@edit_color')->name('colors.edit');
+    // Route::post('/colors/update/{id}', 'AttributeController@update_color')->name('colors.update');
+    // Route::get('/colors/destroy/{id}', 'AttributeController@destroy_color')->name('colors.destroy');
 
-    Route::resource('addons', 'AddonController');
-    Route::post('/addons/activation', 'AddonController@activation')->name('addons.activation');
+    // Route::resource('addons', 'AddonController');
+    // Route::post('/addons/activation', 'AddonController@activation')->name('addons.activation');
 
     Route::get('/customer-bulk-upload/index', 'CustomerBulkUploadController@index')->name('customer_bulk_upload.index');
     Route::post('/bulk-user-upload', 'CustomerBulkUploadController@user_bulk_upload')->name('bulk_user_upload');
@@ -268,16 +272,16 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function(
     Route::resource('countries', 'CountryController');
     Route::post('/countries/status', 'CountryController@updateStatus')->name('countries.status');
 
-    Route::resource('states','StateController');
-	Route::post('/states/status', 'StateController@updateStatus')->name('states.status');
+    Route::resource('states', 'StateController');
+    Route::post('/states/status', 'StateController@updateStatus')->name('states.status');
 
     Route::resource('cities', 'CityController');
     Route::get('/cities/edit/{id}', 'CityController@edit')->name('cities.edit');
     Route::get('/cities/destroy/{id}', 'CityController@destroy')->name('cities.destroy');
     Route::post('/cities/status', 'CityController@updateStatus')->name('cities.status');
 
-    Route::view('/system/update', 'backend.system.update')->name('system_update');
-    Route::view('/system/server-status', 'backend.system.server_status')->name('system_server');
+    // Route::view('/system/update', 'backend.system.update')->name('system_update');
+    // Route::view('/system/server-status', 'backend.system.server_status')->name('system_server');
 
     // uploaded files
     Route::any('/uploaded-files/file-info', 'AizUploadController@file_info')->name('uploaded-files.info');

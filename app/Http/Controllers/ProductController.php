@@ -13,6 +13,7 @@ use App\Models\AttributeValue;
 use App\Models\Cart;
 use App\Models\Color;
 use App\Models\FlashDeal;
+use App\Models\ProductSeo;
 use App\Models\User;
 use Auth;
 use Carbon\Carbon;
@@ -51,10 +52,9 @@ class ProductController extends Controller
             $sort_search = $request->search;
             $products = $products
                 ->where('name', 'like', '%' . $sort_search . '%')
-                ->orWhereHas('stocks', function($q) use ($sort_search){
-                        $q->where('sku', 'like', '%'.$sort_search.'%');
-                    });
-            
+                ->orWhereHas('stocks', function ($q) use ($sort_search) {
+                    $q->where('sku', 'like', '%' . $sort_search . '%');
+                });
         }
 
         $products = $products->where('digital', 0)->orderBy('created_at', 'desc')->paginate(15);
@@ -112,10 +112,9 @@ class ProductController extends Controller
             $sort_search = $request->search;
             $products = $products
                 ->where('name', 'like', '%' . $sort_search . '%')
-                ->orWhereHas('stocks', function($q) use ($sort_search){
-                        $q->where('sku', 'like', '%'.$sort_search.'%');
-                    });
-            
+                ->orWhereHas('stocks', function ($q) use ($sort_search) {
+                    $q->where('sku', 'like', '%' . $sort_search . '%');
+                });
         }
         if ($request->type != null) {
             $var = explode(",", $request->type);
@@ -242,27 +241,6 @@ class ProductController extends Controller
         }
         if ($request->has('is_quantity_multiplied')) {
             $product->is_quantity_multiplied = 1;
-        }
-
-        $product->meta_title = $request->meta_title;
-        $product->meta_description = $request->meta_description;
-
-        if ($request->has('meta_img')) {
-            $product->meta_img = $request->meta_img;
-        } else {
-            $product->meta_img = $product->thumbnail_img;
-        }
-
-        if ($product->meta_title == null) {
-            $product->meta_title = $product->name;
-        }
-
-        if ($product->meta_description == null) {
-            $product->meta_description = strip_tags($product->description);
-        }
-
-        if ($product->meta_img == null) {
-            $product->meta_img = $product->thumbnail_img;
         }
 
         if ($request->hasFile('pdf')) {
@@ -421,7 +399,42 @@ class ProductController extends Controller
         $product_translation->name = $request->name;
         $product_translation->unit = $request->unit;
         $product_translation->description = $request->description;
+        $product_translation->meta_title = $product->meta_title;
+        $product_translation->meta_description = $product->meta_description;
+        $product_translation->meta_keywords = $product->meta_keywords;
         $product_translation->save();
+
+
+        // Seo Section
+        $seo = ProductSeo::firstOrNew(['lang' => env('DEFAULT_LANGUAGE'), 'product_id' => $product->id]);
+        $seo->meta_title = $request->meta_title;
+        $seo->og_title = $request->meta_title;
+        $seo->twitter_title = $request->meta_title;
+
+        $seo->meta_description = $request->meta_description;
+        $seo->og_description = $request->meta_description;
+        $seo->twitter_description = $request->meta_description;
+
+        $seo->meta_keywords = $request->meta_keywords;
+
+        if ($request->has('meta_img')) {
+            $product->meta_img = $request->meta_img;
+        } else {
+            $product->meta_img = $product->thumbnail_img;
+        }
+
+        if ($seo->meta_title == null) {
+            $seo->meta_title = $product->name;
+            $seo->og_title = $product->name;
+            $seo->twitter_title = $product->name;
+        }
+
+        if ($seo->meta_description == null) {
+            $desc = strip_tags($product->description);
+            $seo->meta_description = $desc;
+            $seo->og_description = $desc;
+            $seo->twitter_description = $desc;
+        }
 
         flash(translate('Product has been inserted successfully'))->success();
 
@@ -459,7 +472,7 @@ class ProductController extends Controller
      */
     public function admin_product_edit(Request $request, $id)
     {
-        //CoreComponentRepository::initializeCache();
+        // CoreComponentRepository::initializeCache();
 
         $product = Product::findOrFail($id);
         if ($product->digital == 1) {
@@ -467,12 +480,16 @@ class ProductController extends Controller
         }
 
         $lang = $request->lang;
+
+        $seo = $product->getSeoTranslation($lang);
+
         $tags = json_decode($product->tags);
         $categories = Category::where('parent_id', 0)
             ->where('digital', 0)
             ->with('childrenCategories')
             ->get();
-        return view('backend.product.products.edit', compact('product', 'categories', 'tags', 'lang'));
+
+        return view('backend.product.products.edit', compact('product', 'categories', 'tags', 'lang', 'seo'));
     }
 
     /**
@@ -494,7 +511,7 @@ class ProductController extends Controller
             ->where('digital', 0)
             ->with('childrenCategories')
             ->get();
-            
+
         return view('backend.product.products.edit', compact('product', 'categories', 'tags', 'lang'));
     }
 
@@ -599,18 +616,7 @@ class ProductController extends Controller
             $product->todays_deal = 1;
         }
 
-        $product->meta_title        = $request->meta_title;
-        $product->meta_description  = $request->meta_description;
         $product->meta_img          = $request->meta_img;
-
-        if ($product->meta_title == null) {
-            $product->meta_title = $product->name;
-        }
-
-        if ($product->meta_description == null) {
-            $product->meta_description = strip_tags($product->description);
-        }
-
         if ($product->meta_img == null) {
             $product->meta_img = $product->thumbnail_img;
         }
@@ -743,11 +749,49 @@ class ProductController extends Controller
         }
 
         // Product Translations
-        $product_translation                = ProductTranslation::firstOrNew(['lang' => $request->lang, 'product_id' => $product->id]);
+        $product_translation = ProductTranslation::firstOrNew(['lang' => $request->lang, 'product_id' => $product->id]);
+
         $product_translation->name          = $request->name;
         $product_translation->unit          = $request->unit;
         $product_translation->description   = $request->description;
         $product_translation->save();
+
+        // SEO
+        $seo = ProductSeo::firstOrNew(['lang' => $request->lang, 'product_id' => $product->id]);
+
+        $seo->meta_title        = $request->meta_title;
+        $seo->meta_description  = $request->meta_description;
+        $seo->meta_keywords = $request->meta_keywords;
+
+        $seo->og_title        = $request->og_title;
+        $seo->og_description  = $request->og_description;
+
+        $seo->twitter_title        = $request->twitter_title;
+        $seo->twitter_description  = $request->twitter_description;
+
+        if ($seo->meta_title == null) {
+            $seo->meta_title = $product->name;
+        }
+        if ($seo->og_title == null) {
+            $seo->og_title = $product->name;
+        }
+        if ($seo->twitter_title == null) {
+            $seo->twitter_title = $product->name;
+        }
+
+
+        $seo_dec = strip_tags($product->description);
+        if ($seo->meta_description == null) {
+            $seo->meta_description = $seo_dec;
+        }
+        if ($seo->og_description == null) {
+            $seo->og_description = $seo_dec;
+        }
+        if ($seo->twitter_description == null) {
+            $seo->twitter_description = $seo_dec;
+        }
+
+        $seo->save();
 
         flash(translate('Product has been updated successfully'))->success();
 
@@ -772,6 +816,10 @@ class ProductController extends Controller
 
         foreach ($product->stocks as $key => $stock) {
             $stock->delete();
+        }
+
+        foreach ($product->seo as $seo) {
+            $seo->delete();
         }
 
         if (Product::destroy($id)) {

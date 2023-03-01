@@ -9,8 +9,24 @@ class Product extends Model
 {
 
     protected $fillable = [
-        'name', 'added_by', 'user_id', 'category_id', 'brand_id', 'video_provider', 'video_link', 'description', 'unit_price',
-        'purchase_price', 'unit', 'slug', 'approved', 'colors', 'choice_options', 'variations', 'photos', 'thumbnail_img', 'meta_title', 'meta_description'
+        'name',
+        'added_by',
+        'user_id',
+        'category_id',
+        'brand_id',
+        'video_provider',
+        'video_link',
+        'description',
+        'unit_price',
+        'purchase_price',
+        'unit',
+        'slug',
+        'approved',
+        'colors',
+        'choice_options',
+        'variations',
+        'photos',
+        'thumbnail_img',
     ];
 
     protected $with = ['product_translations', 'taxes'];
@@ -25,6 +41,17 @@ class Product extends Model
     public function product_translations()
     {
         return $this->hasMany(ProductTranslation::class);
+    }
+
+    public function seo()
+    {
+        return $this->hasMany(ProductSeo::class);
+    }
+
+    public function getSeoTranslation($lang = "")
+    {
+        $lang = $lang == "" ? App::getLocale() : $lang;
+        return $this->seo->where('lang', $lang)->first();
     }
 
     public function category()

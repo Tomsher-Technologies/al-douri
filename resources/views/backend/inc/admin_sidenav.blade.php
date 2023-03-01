@@ -71,11 +71,11 @@
                                     <span class="aiz-side-nav-text">{{ translate('All Products') }}</span>
                                 </a>
                             </li>
-                            <li class="aiz-side-nav-item">
+                            {{-- <li class="aiz-side-nav-item">
                                 <a href="{{route('products.admin')}}" class="aiz-side-nav-link {{ areActiveRoutes(['products.admin', 'products.create', 'products.admin.edit']) }}" >
                                     <span class="aiz-side-nav-text">{{ translate('In House Products') }}</span>
                                 </a>
-                            </li>
+                            </li> --}}
                             @if(get_setting('vendor_system_activation') == 1)
                                 <li class="aiz-side-nav-item">
                                     <a href="{{route('products.seller')}}" class="aiz-side-nav-link {{ areActiveRoutes(['products.seller', 'products.seller.edit']) }}">
@@ -83,21 +83,12 @@
                                     </a>
                                 </li>
                             @endif
-                            <li class="aiz-side-nav-item">
+                            {{-- <li class="aiz-side-nav-item">
                                 <a href="{{route('digitalproducts.index')}}" class="aiz-side-nav-link {{ areActiveRoutes(['digitalproducts.index', 'digitalproducts.create', 'digitalproducts.edit']) }}">
                                     <span class="aiz-side-nav-text">{{ translate('Digital Products') }}</span>
                                 </a>
-                            </li>
-                            <li class="aiz-side-nav-item">
-                                <a href="{{ route('product_bulk_upload.index') }}" class="aiz-side-nav-link" >
-                                    <span class="aiz-side-nav-text">{{ translate('Bulk Import') }}</span>
-                                </a>
-                            </li>
-                            <li class="aiz-side-nav-item">
-                                <a href="{{route('product_bulk_export.index')}}" class="aiz-side-nav-link">
-                                    <span class="aiz-side-nav-text">{{translate('Bulk Export')}}</span>
-                                </a>
-                            </li>
+                            </li> --}}
+                            
                             <li class="aiz-side-nav-item">
                                 <a href="{{route('categories.index')}}" class="aiz-side-nav-link {{ areActiveRoutes(['categories.index', 'categories.create', 'categories.edit'])}}">
                                     <span class="aiz-side-nav-text">{{translate('Category')}}</span>
@@ -113,14 +104,25 @@
                                     <span class="aiz-side-nav-text">{{translate('Attribute')}}</span>
                                 </a>
                             </li>
-                            <li class="aiz-side-nav-item">
+                            {{-- <li class="aiz-side-nav-item">
                                 <a href="{{route('colors')}}" class="aiz-side-nav-link {{ areActiveRoutes(['attributes.index','attributes.create','attributes.edit'])}}">
                                     <span class="aiz-side-nav-text">{{translate('Colors')}}</span>
                                 </a>
-                            </li>
+                            </li> --}}
                             <li class="aiz-side-nav-item">
                                 <a href="{{route('reviews.index')}}" class="aiz-side-nav-link">
                                     <span class="aiz-side-nav-text">{{translate('Product Reviews')}}</span>
+                                </a>
+                            </li>
+
+                            <li class="aiz-side-nav-item">
+                                <a href="{{ route('product_bulk_upload.index') }}" class="aiz-side-nav-link" >
+                                    <span class="aiz-side-nav-text">{{ translate('Bulk Import') }}</span>
+                                </a>
+                            </li>
+                            <li class="aiz-side-nav-item">
+                                <a href="{{route('product_bulk_export.index')}}" class="aiz-side-nav-link">
+                                    <span class="aiz-side-nav-text">{{translate('Bulk Export')}}</span>
                                 </a>
                             </li>
                         </ul>
@@ -473,7 +475,7 @@
                 @endif
                 @if(Auth::user()->user_type == 'admin' || in_array('23', json_decode(Auth::user()->staff->role->permissions)))
                 <!--Blog System-->
-                    <li class="aiz-side-nav-item">
+                    {{-- <li class="aiz-side-nav-item">
                         <a href="#" class="aiz-side-nav-link">
                             <i class="las la-bullhorn aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">{{ translate('Blog System') }}</span>
@@ -491,7 +493,7 @@
                                 </a>
                             </li>
                         </ul>
-                    </li>
+                    </li> --}}
                 @endif
 
             <!-- marketing -->
@@ -993,7 +995,7 @@
                         </ul>
                     </li>
                 @endif
-                @if(Auth::user()->user_type == 'admin' || in_array('24', json_decode(Auth::user()->staff->role->permissions)))
+                {{-- @if(Auth::user()->user_type == 'admin' || in_array('24', json_decode(Auth::user()->staff->role->permissions)))
                     <li class="aiz-side-nav-item">
                         <a href="#" class="aiz-side-nav-link">
                             <i class="las la-user-tie aiz-side-nav-icon"></i>
@@ -1013,17 +1015,17 @@
                             </li>
                         </ul>
                     </li>
-                @endif
+                @endif --}}
 
             <!-- Addon Manager -->
-                @if(Auth::user()->user_type == 'admin' || in_array('21', json_decode(Auth::user()->staff->role->permissions)))
+                {{-- @if(Auth::user()->user_type == 'admin' || in_array('21', json_decode(Auth::user()->staff->role->permissions)))
                     <li class="aiz-side-nav-item">
                         <a href="{{route('addons.index')}}" class="aiz-side-nav-link {{ areActiveRoutes(['addons.index', 'addons.create'])}}">
                             <i class="las la-wrench aiz-side-nav-icon"></i>
                             <span class="aiz-side-nav-text">{{translate('Addon Manager')}}</span>
                         </a>
                     </li>
-                @endif
+                @endif --}}
             </ul><!-- .aiz-side-nav -->
         </div><!-- .aiz-side-nav-wrap -->
     </div><!-- .aiz-sidebar -->

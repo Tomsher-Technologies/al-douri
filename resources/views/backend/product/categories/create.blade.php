@@ -77,19 +77,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-md-3 col-form-label">{{translate('Meta Title')}}</label>
-                        <div class="col-md-9">
-                            <input type="text" class="form-control" name="meta_title" placeholder="{{translate('Meta Title')}}">
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <label class="col-md-3 col-form-label">{{translate('Meta Description')}}</label>
-                        <div class="col-md-9">
-                            <textarea name="meta_description" rows="5" class="form-control"></textarea>
-                        </div>
-                    </div>
+                    
                     @if (get_setting('category_wise_commission') == 1)
                         <div class="form-group row">
                             <label class="col-md-3 col-form-label">{{translate('Commission Rate')}}</label>
@@ -111,6 +99,24 @@
                             </select>
                         </div>
                     </div>
+
+                    <h5 class="mb-0 h6">{{translate('SEO Section')}}</h5>
+                    <hr>
+
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">{{translate('Meta Title')}}</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" name="meta_title" placeholder="{{translate('Meta Title')}}">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label">{{translate('Meta Description')}}</label>
+                        <div class="col-md-9">
+                            <textarea name="meta_description" rows="5" class="form-control"></textarea>
+                        </div>
+                    </div>
+
                     <div class="form-group mb-0 text-right">
                         <button type="submit" class="btn btn-primary">{{translate('Save')}}</button>
                     </div>

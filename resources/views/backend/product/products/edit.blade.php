@@ -193,7 +193,7 @@
                         <h5 class="mb-0 h6">{{translate('Product Variation')}}</h5>
                     </div>
                     <div class="card-body">
-                        <div class="form-group row gutters-5">
+                        {{-- <div class="form-group row gutters-5">
                             <div class="col-lg-3">
                                 <input type="text" class="form-control" value="{{translate('Colors')}}" disabled>
                             </div>
@@ -214,7 +214,7 @@
                                     <span></span>
                                 </label>
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="form-group row gutters-5">
                             <div class="col-lg-3">
@@ -396,15 +396,48 @@
                         <div class="form-group row">
                             <label class="col-lg-3 col-from-label">{{translate('Meta Title')}}</label>
                             <div class="col-lg-8">
-                                <input type="text" class="form-control" name="meta_title" value="{{ $product->meta_title }}" placeholder="{{translate('Meta Title')}}">
+                                <input type="text" class="form-control" name="meta_title" value="{{ $seo->meta_title ?? "" }}" placeholder="{{translate('Meta Title')}}">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-lg-3 col-from-label">{{translate('Description')}}</label>
                             <div class="col-lg-8">
-                                <textarea name="meta_description" rows="8" class="form-control">{{ $product->meta_description }}</textarea>
+                                <textarea name="meta_description" rows="8" class="form-control">{{ $seo->meta_description ?? "" }}</textarea>
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-from-label">{{translate('Keywords')}}</label>
+                            <div class="col-md-8">
+                                <textarea name="meta_keywords" rows="8" class="form-control">{{ $seo->meta_keywords ?? "" }}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-from-label">{{translate('OG Title')}}</label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" name="og_title" value="{{ $seo->og_title ?? "" }}" placeholder="{{translate('OG Title')}}">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-from-label">{{translate('OG Description')}}</label>
+                            <div class="col-lg-8">
+                                <textarea name="og_description" rows="8" class="form-control">{{ $seo->og_description ?? "" }}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-from-label">{{translate('Twitter Title')}}</label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" name="twitter_title" value="{{ $seo->twitter_title ?? "" }}" placeholder="{{translate('Twitter Title')}}">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-from-label">{{translate('Twitter Description')}}</label>
+                            <div class="col-lg-8">
+                                <textarea name="twitter_description" rows="8" class="form-control">{{ $seo->twitter_description ?? "" }}</textarea>
+                            </div>
+                        </div>
+
                         <div class="form-group row">
                             <label class="col-md-3 col-form-label" for="signinSrEmail">{{translate('Meta Images')}}</label>
                             <div class="col-md-8">

@@ -153,7 +153,7 @@
                         <h5 class="mb-0 h6">{{translate('Product Variation')}}</h5>
                     </div>
                     <div class="card-body">
-                        <div class="form-group row gutters-5">
+                        {{-- <div class="form-group row gutters-5">
                             <div class="col-md-3">
                                 <input type="text" class="form-control" value="{{translate('Colors')}}" disabled>
                             </div>
@@ -170,7 +170,7 @@
                                     <span></span>
                                 </label>
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="form-group row gutters-5">
                             <div class="col-md-3">
@@ -336,6 +336,12 @@
                             <label class="col-md-3 col-from-label">{{translate('Description')}}</label>
                             <div class="col-md-8">
                                 <textarea name="meta_description" rows="8" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-from-label">{{translate('Keywords')}}</label>
+                            <div class="col-md-8">
+                                <textarea name="meta_keywords" rows="8" class="form-control"></textarea>
                             </div>
                         </div>
                         <div class="form-group row">
