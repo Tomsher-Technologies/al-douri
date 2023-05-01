@@ -12,6 +12,9 @@
 */
 
 //Admin
+
+use Illuminate\Support\Facades\Route;
+
 Route::group(['prefix' =>'admin', 'middleware' => ['auth', 'admin']], function(){
     Route::resource('manual_payment_methods','ManualPaymentMethodController');
     Route::get('/manual_payment_methods/destroy/{id}', 'ManualPaymentMethodController@destroy')->name('manual_payment_methods.destroy');

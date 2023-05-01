@@ -10,8 +10,13 @@ class CategoryTranslation extends Model
         'name',
         'lang',
         'category_id',
+        'order_level',
         'meta_description',
         'meta_keyword',
+        'og_title',
+        'og_description',
+        'twitter_title',
+        'twitter_description',
     ];
 
     public function category()

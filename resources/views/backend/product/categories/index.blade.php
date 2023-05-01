@@ -6,11 +6,11 @@
         <div class="col-md-6">
             <h1 class="h3">{{translate('All Categories')}}</h1>
         </div>
-        <div class="col-md-6 text-md-right">
+        {{-- <div class="col-md-6 text-md-right">
             <a href="{{ route('categories.create') }}" class="btn btn-primary">
                 <span>{{translate('Add New category')}}</span>
             </a>
-        </div>
+        </div> --}}
     </div>
 </div>
 <div class="card">
@@ -33,10 +33,7 @@
                     <th data-breakpoints="lg">{{ translate('Parent Category') }}</th>
                     <th data-breakpoints="lg">{{ translate('Order Level') }}</th>
                     <th data-breakpoints="lg">{{ translate('Level') }}</th>
-                    <th data-breakpoints="lg">{{translate('Banner')}}</th>
-                    <th data-breakpoints="lg">{{translate('Icon')}}</th>
                     <th data-breakpoints="lg">{{translate('Featured')}}</th>
-                    <th data-breakpoints="lg">{{translate('Commission')}}</th>
                     <th width="10%" class="text-right">{{translate('Options')}}</th>
                 </tr>
             </thead>
@@ -57,35 +54,16 @@
                         </td>
                         <td>{{ $category->order_level }}</td>
                         <td>{{ $category->level }}</td>
-                        <td>
-                            @if($category->banner != null)
-                                <img src="{{ uploaded_asset($category->banner) }}" alt="{{translate('Banner')}}" class="h-50px">
-                            @else
-                                —
-                            @endif
-                        </td>
-                        <td>
-                            @if($category->icon != null)
-                                <span class="avatar avatar-square avatar-xs">
-                                    <img src="{{ uploaded_asset($category->icon) }}" alt="{{translate('icon')}}">
-                                </span>
-                            @else
-                                —
-                            @endif
-                        </td>
+                        
                         <td>
                             <label class="aiz-switch aiz-switch-success mb-0">
                                 <input type="checkbox" onchange="update_featured(this)" value="{{ $category->id }}" <?php if($category->featured == 1) echo "checked";?>>
                                 <span></span>
                             </label>
                         </td>
-                        <td>{{ $category->commision_rate }} %</td>
                         <td class="text-right">
                             <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('categories.edit', ['id'=>$category->id, 'lang'=>env('DEFAULT_LANGUAGE')] )}}" title="{{ translate('Edit') }}">
                                 <i class="las la-edit"></i>
-                            </a>
-                            <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete" data-href="{{route('categories.destroy', $category->id)}}" title="{{ translate('Delete') }}">
-                                <i class="las la-trash"></i>
                             </a>
                         </td>
                     </tr>

@@ -132,30 +132,31 @@ class CategoryController extends Controller
     {
         $category = Category::findOrFail($id);
 
+        dd($category);
+
         $request->validate([
             'slug' => 'required'
         ], [
             'slug.required' => "Please enter a slug"
         ]);
 
-        // if ($request->lang == env("DEFAULT_LANGUAGE")) {
-        //     $category->name = $request->name;
-        // }
-        if ($request->order_level != null) {
-            $category->order_level = $request->order_level;
+        if ($request->lang == env("DEFAULT_LANGUAGE")) {
+            $category->name = $request->name;
         }
+        // if ($request->order_level != null) {
+        //     $category->order_level = $request->order_level;
+        // }
         // $category->digital = $request->digital;
         // $category->banner = $request->banner;
         // $category->icon = $request->icon;
+        // $category->meta_title = $request->meta_title ?? $request->name;
+        // $category->meta_description = $request->meta_description;
 
-        $category->meta_title = $request->meta_title ?? $request->name;
-        $category->meta_description = $request->meta_description;
+        // $category->og_title = $request->og_title ?? $category->meta_title;
+        // $category->og_description = $request->og_description ?? $category->meta_description;
 
-        $category->og_title = $request->og_title ?? $category->meta_title;
-        $category->og_description = $request->og_description ?? $category->meta_description;
-
-        $category->twitter_title = $request->twitter_title ?? $category->meta_title;
-        $category->twitter_description = $request->twitter_description ?? $category->meta_description;
+        // $category->twitter_title = $request->twitter_title ?? $category->meta_title;
+        // $category->twitter_description = $request->twitter_description ?? $category->meta_description;
 
         // $previous_level = $category->level;
 
@@ -196,7 +197,7 @@ class CategoryController extends Controller
         // dd($category);
 
         $category_translation = CategoryTranslation::firstOrNew(['lang' => $request->lang, 'category_id' => $category->id]);
-        $category_translation->name = $category->name;
+        $category_translation->name = $request->name;
 
         $category_translation->meta_title = $request->meta_title ?? $request->name;
         $category_translation->meta_description = $request->meta_description;
