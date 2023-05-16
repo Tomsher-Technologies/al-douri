@@ -78,12 +78,20 @@ class CheckoutController
                     'coupon_applied' => 1
                 ]);
 
+                if ($coupon->one_time_use) {
+                    $coupon->is_used = true;
+                    $coupon->save();
+                }
+
+                CouponUsage::create([
+                    'user_id' => auth()->user()->id,
+                    'coupon_id' => $coupon->id,
+                ]);
+
                 return response()->json([
                     'result' => true,
                     'message' => translate('Coupon Applied')
                 ]);
-
-
             }
         } elseif ($coupon->type == 'product_base') {
             $coupon_discount = 0;
@@ -99,6 +107,15 @@ class CheckoutController
                 }
             }
 
+            if ($coupon->one_time_use) {
+                $coupon->is_used = true;
+                $coupon->save();
+            }
+
+            CouponUsage::create([
+                'user_id' => auth()->user()->id,
+                'coupon_id' => $coupon->id,
+            ]);
 
             Cart::where('user_id', auth()->user()->id)->update([
                 'discount' => $coupon_discount / count($cart_items),
@@ -110,19 +127,36 @@ class CheckoutController
                 'result' => true,
                 'message' => translate('Coupon Applied')
             ]);
-
         }
-
-
     }
 
     public function remove_coupon_code(Request $request)
     {
-        Cart::where('user_id', auth()->user()->id)->update([
-            'discount' => 0.00,
-            'coupon_code' => "",
-            'coupon_applied' => 0
-        ]);
+        $cart =  Cart::where('user_id', auth()->user()->id)->get();
+
+        foreach ($cart as $singleCart) {
+            $coupon = Coupon::where([
+                'code' => $singleCart->coupon_code,
+                'one_time_use' => 1,
+            ])->get()->first();
+
+            if ($coupon) {
+                $coupon->is_used = 0;
+                $coupon->save();
+            }
+
+            $singleCart->update([
+                'discount' => 0.00,
+                'coupon_code' => "",
+                'coupon_applied' => 0
+            ]);
+
+            CouponUsage::where([
+                'user_id' => auth()->user()->id,
+                'coupon_id' => $coupon->id
+            ])->delete();
+        }
+
 
         return response()->json([
             'result' => true,

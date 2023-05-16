@@ -5,6 +5,7 @@
 namespace App\Http\Controllers\Api\V2;
 
 use App\Http\Controllers\OTPVerificationController;
+use App\Http\Requests\API\RegisterRequest;
 use App\Models\BusinessSetting;
 use App\Models\Customer;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ use Hash;
 
 class AuthController extends Controller
 {
-    public function signup(Request $request)
+    public function signup(RegisterRequest $request)
     {
         if (User::where('email', $request->email_or_phone)->orWhere('phone', $request->email_or_phone)->first() != null) {
             return response()->json([
@@ -53,8 +54,8 @@ class AuthController extends Controller
                 }
             } 
         } else {
-            $otpController = new OTPVerificationController();
-            $otpController->send_code($user);
+            // $otpController = new OTPVerificationController();
+            // $otpController->send_code($user);
         }
 
         $user->save();

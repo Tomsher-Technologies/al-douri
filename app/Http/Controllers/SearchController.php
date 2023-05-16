@@ -13,6 +13,7 @@ use App\Models\Shop;
 use App\Models\Attribute;
 use App\Models\AttributeCategory;
 use App\Utility\CategoryUtility;
+use Auth;
 
 class SearchController extends Controller
 {
@@ -152,6 +153,7 @@ class SearchController extends Controller
     //Suggestional Search
     public function ajax_search(Request $request)
     {
+        $this->store($request);
         $keywords = array();
         $query = $request->search;
         $products = Product::where('published', 1)->where('tags', 'like', '%' . $query . '%')->get();
@@ -205,14 +207,35 @@ class SearchController extends Controller
      */
     public function store(Request $request)
     {
-        $search = Search::where('query', $request->keyword)->first();
-        if ($search != null) {
-            $search->count = $search->count + 1;
-            $search->save();
+        // $request->ip()
+
+        $data = [];
+
+        if (auth()->user() != null) {
+            $user_id = Auth::user()->id;
+            $data['user_id'] = $user_id;
         } else {
-            $search = new Search;
-            $search->query = $request->keyword;
-            $search->save();
+            if ($request->session()->get('temp_user_id')) {
+                $temp_user_id = $request->session()->get('temp_user_id');
+            } else {
+                $temp_user_id = bin2hex(random_bytes(10));
+                $request->session()->put('temp_user_id', $temp_user_id);
+            }
+            $data['temp_user_id'] = $temp_user_id;
         }
+
+        $data['query'] = $request->search ?? $request->keyword;
+        $data['ip_address'] = $request->ip();
+        Search::create($data);
+
+        // $search = Search::where('query', $request->keyword)->first();
+        // if ($search != null) {
+        //     $search->count = $search->count + 1;
+        //     $search->save();
+        // } else {
+        //     $search = new Search;
+        //     $search->query = $request->keyword;
+        //     $search->save();
+        // }
     }
 }

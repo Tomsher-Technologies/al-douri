@@ -19,11 +19,11 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
-        $sort_search =null;
+        $sort_search = null;
         $categories = Category::orderBy('order_level', 'desc');
-        if ($request->has('search')){
+        if ($request->has('search')) {
             $sort_search = $request->search;
-            $categories = $categories->where('name', 'like', '%'.$sort_search.'%');
+            $categories = $categories->where('name', 'like', '%' . $sort_search . '%');
         }
         $categories = $categories->paginate(15);
         return view('backend.product.categories.index', compact('categories', 'sort_search'));
@@ -54,7 +54,7 @@ class CategoryController extends Controller
         $category = new Category;
         $category->name = $request->name;
         $category->order_level = 0;
-        if($request->order_level != null) {
+        if ($request->order_level != null) {
             $category->order_level = $request->order_level;
         }
         $category->digital = $request->digital;
@@ -67,14 +67,13 @@ class CategoryController extends Controller
             $category->parent_id = $request->parent_id;
 
             $parent = Category::find($request->parent_id);
-            $category->level = $parent->level + 1 ;
+            $category->level = $parent->level + 1;
         }
 
         if ($request->slug != null) {
             $category->slug = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $request->slug));
-        }
-        else {
-            $category->slug = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $request->name)).'-'.Str::random(5);
+        } else {
+            $category->slug = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $request->name)) . '-' . Str::random(5);
         }
         if ($request->commision_rate != null) {
             $category->commision_rate = $request->commision_rate;
@@ -115,8 +114,8 @@ class CategoryController extends Controller
         $category = Category::findOrFail($id);
         $categories = Category::where('parent_id', 0)
             ->with('childrenCategories')
-            ->whereNotIn('id', CategoryUtility::children_ids($category->id, true))->where('id', '!=' , $category->id)
-            ->orderBy('name','asc')
+            ->whereNotIn('id', CategoryUtility::children_ids($category->id, true))->where('id', '!=', $category->id)
+            ->orderBy('name', 'asc')
             ->get();
 
         return view('backend.product.categories.edit', compact('category', 'categories', 'lang'));
@@ -132,56 +131,82 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         $category = Category::findOrFail($id);
-        if($request->lang == env("DEFAULT_LANGUAGE")){
-            $category->name = $request->name;
-        }
-        if($request->order_level != null) {
+
+        $request->validate([
+            'slug' => 'required'
+        ], [
+            'slug.required' => "Please enter a slug"
+        ]);
+
+        // if ($request->lang == env("DEFAULT_LANGUAGE")) {
+        //     $category->name = $request->name;
+        // }
+        if ($request->order_level != null) {
             $category->order_level = $request->order_level;
         }
-        $category->digital = $request->digital;
+        // $category->digital = $request->digital;
         $category->banner = $request->banner;
         $category->icon = $request->icon;
-        $category->meta_title = $request->meta_title;
+
+        $category->meta_title = $request->meta_title ?? $request->name;
         $category->meta_description = $request->meta_description;
 
-        $previous_level = $category->level;
+        $category->og_title = $request->og_title ?? $category->meta_title;
+        $category->og_description = $request->og_description ?? $category->meta_description;
 
-        if ($request->parent_id != "0") {
-            $category->parent_id = $request->parent_id;
+        $category->twitter_title = $request->twitter_title ?? $category->meta_title;
+        $category->twitter_description = $request->twitter_description ?? $category->meta_description;
 
-            $parent = Category::find($request->parent_id);
-            $category->level = $parent->level + 1 ;
-        }
-        else{
-            $category->parent_id = 0;
-            $category->level = 0;
-        }
+        // $previous_level = $category->level;
 
-        if($category->level > $previous_level){
-            CategoryUtility::move_level_down($category->id);
-        }
-        elseif ($category->level < $previous_level) {
-            CategoryUtility::move_level_up($category->id);
-        }
+        // if ($request->parent_id != "0") {
+        //     $category->parent_id = $request->parent_id;
+
+        //     $parent = Category::find($request->parent_id);
+        //     $category->level = $parent->level + 1 ;
+        // }
+        // else{
+        //     $category->parent_id = 0;
+        //     $category->level = 0;
+        // }
+
+        // if($category->level > $previous_level){
+        //     CategoryUtility::move_level_down($category->id);
+        // }
+        // elseif ($category->level < $previous_level) {
+        //     CategoryUtility::move_level_up($category->id);
+        // }
 
         if ($request->slug != null) {
-            $category->slug = strtolower($request->slug);
-        }
-        else {
-            $category->slug = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $request->name)).'-'.Str::random(5);
+            $slug = strtolower(Str::slug($request->slug, '-'));
+            $same_slug_count = Category::where('slug', 'LIKE', $slug . '%')->count();
+            $slug_suffix = $same_slug_count > 1 ? '-' . $same_slug_count + 1 : '';
+            $slug .= $slug_suffix;
+            $category->slug = $slug;
         }
 
 
-        if ($request->commision_rate != null) {
-            $category->commision_rate = $request->commision_rate;
-        }
+        // if ($request->commision_rate != null) {
+        //     $category->commision_rate = $request->commision_rate;
+        // }
 
         $category->save();
 
-        $category->attributes()->sync($request->filtering_attributes);
+        // $category->attributes()->sync($request->filtering_attributes);
+        // dd($category);
 
         $category_translation = CategoryTranslation::firstOrNew(['lang' => $request->lang, 'category_id' => $category->id]);
-        $category_translation->name = $request->name;
+        $category_translation->name = $category->name;
+
+        $category_translation->meta_title = $request->meta_title ?? $request->name;
+        $category_translation->meta_description = $request->meta_description;
+
+        $category_translation->og_title = $request->og_title ?? $category_translation->meta_title;
+        $category_translation->og_description = $request->og_description ?? $category_translation->meta_description;
+
+        $category_translation->twitter_title = $request->twitter_title ?? $category_translation->meta_title;
+        $category_translation->twitter_description = $request->twitter_description ?? $category_translation->meta_description;
+
         $category_translation->save();
 
         Cache::forget('featured_categories');

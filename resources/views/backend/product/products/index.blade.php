@@ -7,13 +7,6 @@
         <div class="col-auto">
             <h1 class="h3">{{translate('All products')}}</h1>
         </div>
-        @if($type != 'Seller')
-        <div class="col text-right">
-            <a href="{{ route('products.create') }}" class="btn btn-circle btn-info">
-                <span>{{translate('Add New Product')}}</span>
-            </a>
-        </div>
-        @endif
     </div>
 </div>
 <br>
@@ -24,38 +17,6 @@
             <div class="col">
                 <h5 class="mb-md-0 h6">{{ translate('All Product') }}</h5>
             </div>
-            
-            <div class="dropdown mb-2 mb-md-0">
-                <button class="btn border dropdown-toggle" type="button" data-toggle="dropdown">
-                    {{translate('Bulk Action')}}
-                </button>
-                <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="#" onclick="bulk_delete()"> {{translate('Delete selection')}}</a>
-                </div>
-            </div>
-            
-            @if($type == 'Seller')
-            <div class="col-md-2 ml-auto">
-                <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="user_id" name="user_id" onchange="sort_products()">
-                    <option value="">{{ translate('All Sellers') }}</option>
-                    @foreach (App\Models\Seller::all() as $key => $seller)
-                        @if ($seller->user != null && $seller->user->shop != null)
-                            <option value="{{ $seller->user->id }}" @if ($seller->user->id == $seller_id) selected @endif>{{ $seller->user->shop->name }} ({{ $seller->user->name }})</option>
-                        @endif
-                    @endforeach
-                </select>
-            </div>
-            @endif
-            @if($type == 'All')
-            <div class="col-md-2 ml-auto">
-                <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" id="user_id" name="user_id" onchange="sort_products()">
-                    <option value="">{{ translate('All Sellers') }}</option>
-                        @foreach (App\Models\User::where('user_type', '=', 'admin')->orWhere('user_type', '=', 'seller')->get() as $key => $seller)
-                            <option value="{{ $seller->id }}" @if ($seller->id == $seller_id) selected @endif>{{ $seller->name }}</option>
-                        @endforeach
-                </select>
-            </div>
-            @endif
             <div class="col-md-2 ml-auto">
                 <select class="form-control form-control-sm aiz-selectpicker mb-2 mb-md-0" name="type" id="type" onchange="sort_products()">
                     <option value="">{{ translate('Sort By') }}</option>
@@ -96,7 +57,7 @@
                         <th data-breakpoints="sm">{{translate('Info')}}</th>
                         <th data-breakpoints="md">{{translate('Total Stock')}}</th>
                         <th data-breakpoints="lg">{{translate('Todays Deal')}}</th>
-                        <th data-breakpoints="lg">{{translate('Published')}}</th>
+                        {{-- <th data-breakpoints="lg">{{translate('Published')}}</th> --}}
                         @if(get_setting('product_approve_by_admin') == 1 && $type == 'Seller')
                             <th data-breakpoints="lg">{{translate('Approved')}}</th>
                         @endif
@@ -123,6 +84,7 @@
                                 </div>
                                 <div class="col">
                                     <span class="text-muted text-truncate-2">{{ $product->getTranslation('name') }}</span>
+                                    <span class="text-muted text-truncate-2">SKU: {{ $product->sku }}</span>
                                 </div>
                             </div>
                         </td>
@@ -159,12 +121,12 @@
                                 <span class="slider round"></span>
                             </label>
                         </td>
-                        <td>
+                        {{-- <td>
                             <label class="aiz-switch aiz-switch-success mb-0">
                                 <input onchange="update_published(this)" value="{{ $product->id }}" type="checkbox" <?php if ($product->published == 1) echo "checked"; ?> >
                                 <span class="slider round"></span>
                             </label>
-                        </td>
+                        </td> --}}
                         @if(get_setting('product_approve_by_admin') == 1 && $type == 'Seller')
                             <td>
                                 <label class="aiz-switch aiz-switch-success mb-0">
@@ -180,10 +142,10 @@
                             </label>
                         </td>
                         <td class="text-right">
-                            <a class="btn btn-soft-success btn-icon btn-circle btn-sm"  href="{{ route('product', $product->slug) }}" target="_blank" title="{{ translate('View') }}">
+                            <a class="btn btn-soft-success btn-icon btn-circle btn-sm"  href="{{ route('products.admin.edit', ['id'=>$product->id, 'lang'=>env('DEFAULT_LANGUAGE')]) }}" target="_blank" title="{{ translate('View') }}">
                                 <i class="las la-eye"></i>
                             </a>
-                            @if ($type == 'Seller')
+                            {{-- @if ($type == 'Seller')
                             <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('products.seller.edit', ['id'=>$product->id, 'lang'=>env('DEFAULT_LANGUAGE')] )}}" title="{{ translate('Edit') }}">
                                 <i class="las la-edit"></i>
                             </a>
@@ -191,13 +153,13 @@
                             <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('products.admin.edit', ['id'=>$product->id, 'lang'=>env('DEFAULT_LANGUAGE')] )}}" title="{{ translate('Edit') }}">
                                 <i class="las la-edit"></i>
                             </a>
-                            @endif
-                            <a class="btn btn-soft-warning btn-icon btn-circle btn-sm" href="{{route('products.duplicate', ['id'=>$product->id, 'type'=>$type]  )}}" title="{{ translate('Duplicate') }}">
+                            @endif --}}
+                            {{-- <a class="btn btn-soft-warning btn-icon btn-circle btn-sm" href="{{route('products.duplicate', ['id'=>$product->id, 'type'=>$type]  )}}" title="{{ translate('Duplicate') }}">
                                 <i class="las la-copy"></i>
                             </a>
                             <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete" data-href="{{route('products.destroy', $product->id)}}" title="{{ translate('Delete') }}">
                                 <i class="las la-trash"></i>
-                            </a>
+                            </a> --}}
                         </td>
                     </tr>
                     @endforeach
@@ -255,22 +217,22 @@
             });
         }
 
-        function update_published(el){
-            if(el.checked){
-                var status = 1;
-            }
-            else{
-                var status = 0;
-            }
-            $.post('{{ route('products.published') }}', {_token:'{{ csrf_token() }}', id:el.value, status:status}, function(data){
-                if(data == 1){
-                    AIZ.plugins.notify('success', '{{ translate('Published products updated successfully') }}');
-                }
-                else{
-                    AIZ.plugins.notify('danger', '{{ translate('Something went wrong') }}');
-                }
-            });
-        }
+        // function update_published(el){
+        //     if(el.checked){
+        //         var status = 1;
+        //     }
+        //     else{
+        //         var status = 0;
+        //     }
+        //     $.post('', {_token:'{{ csrf_token() }}', id:el.value, status:status}, function(data){
+        //         if(data == 1){
+        //             AIZ.plugins.notify('success', '{{ translate('Published products updated successfully') }}');
+        //         }
+        //         else{
+        //             AIZ.plugins.notify('danger', '{{ translate('Something went wrong') }}');
+        //         }
+        //     });
+        // }
         
         function update_approved(el){
             if(el.checked){
@@ -314,25 +276,25 @@
             $('#sort_products').submit();
         }
         
-        function bulk_delete() {
-            var data = new FormData($('#sort_products')[0]);
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: "{{route('bulk-product-delete')}}",
-                type: 'POST',
-                data: data,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    if(response == 1) {
-                        location.reload();
-                    }
-                }
-            });
-        }
+        // function bulk_delete() {
+        //     var data = new FormData($('#sort_products')[0]);
+        //     $.ajax({
+        //         headers: {
+        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //         },
+        //         url: "",
+        //         type: 'POST',
+        //         data: data,
+        //         cache: false,
+        //         contentType: false,
+        //         processData: false,
+        //         success: function (response) {
+        //             if(response == 1) {
+        //                 location.reload();
+        //             }
+        //         }
+        //     });
+        // }
 
     </script>
 @endsection

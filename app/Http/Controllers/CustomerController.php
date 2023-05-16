@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Address;
+use App\Models\Country;
 use Illuminate\Http\Request;
 use App\Models\Customer;
 use App\Models\User;
 use App\Models\Order;
+use Hash;
 
 class CustomerController extends Controller
 {
@@ -17,11 +20,11 @@ class CustomerController extends Controller
     public function index(Request $request)
     {
         $sort_search = null;
-        $users = User::where('user_type', 'customer')->where('email_verified_at', '!=', null)->orderBy('created_at', 'desc');
-        if ($request->has('search')){
+        $users = User::where('user_type', 'customer')->orderBy('created_at', 'desc');
+        if ($request->has('search')) {
             $sort_search = $request->search;
-            $users->where(function ($q) use ($sort_search){
-                $q->where('name', 'like', '%'.$sort_search.'%')->orWhere('email', 'like', '%'.$sort_search.'%');
+            $users->where(function ($q) use ($sort_search) {
+                $q->where('name', 'like', '%' . $sort_search . '%')->orWhere('email', 'like', '%' . $sort_search . '%');
             });
         }
         $users = $users->paginate(15);
@@ -51,33 +54,33 @@ class CustomerController extends Controller
             'email'         => 'required|unique:users|email',
             'phone'         => 'required|unique:users',
         ]);
-        
+
         $response['status'] = 'Error';
-        
+
         $user = User::create($request->all());
-        
+
         $customer = new Customer;
-        
+
         $customer->user_id = $user->id;
         $customer->save();
-        
+
         if (isset($user->id)) {
             $html = '';
             $html .= '<option value="">
-                        '. translate("Walk In Customer") .'
+                        ' . translate("Walk In Customer") . '
                     </option>';
-            foreach(Customer::all() as $key => $customer){
+            foreach (Customer::all() as $key => $customer) {
                 if ($customer->user) {
-                    $html .= '<option value="'.$customer->user->id.'" data-contact="'.$customer->user->email.'">
-                                '.$customer->user->name.'
+                    $html .= '<option value="' . $customer->user->id . '" data-contact="' . $customer->user->email . '">
+                                ' . $customer->user->name . '
                             </option>';
                 }
             }
-            
+
             $response['status'] = 'Success';
             $response['html'] = $html;
         }
-        
+
         echo json_encode($response);
     }
 
@@ -100,7 +103,12 @@ class CustomerController extends Controller
      */
     public function edit($id)
     {
-        //
+        $customer = User::where('user_type', 'customer')->with(['addresses', 'addresses.country', 'addresses.state', 'addresses.city'])->withCount(['orders'])->findOrFail($id);
+        // dd($customer);
+
+        $country = Country::all();
+
+        return view('backend.customer.customers.edit', compact('customer', 'country'));
     }
 
     /**
@@ -112,7 +120,25 @@ class CustomerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            // 'password' => 'sometimes|confirmed'
+            'password' => 'nullable|min:6|confirmed',
+        ]);
+
+        $user = User::findOrFail($id);
+
+        $user->name = $request->name;
+        $user->phone = $request->phone;
+
+        if ($request->password) {
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
+        flash(translate('Customer data has been updated'))->success();
+        return redirect()->back();
     }
 
     /**
@@ -127,14 +153,15 @@ class CustomerController extends Controller
         flash(translate('Customer has been deleted successfully'))->success();
         return redirect()->route('customers.index');
     }
-    
-    public function bulk_customer_delete(Request $request) {
-        if($request->id) {
+
+    public function bulk_customer_delete(Request $request)
+    {
+        if ($request->id) {
             foreach ($request->id as $customer_id) {
                 $this->destroy($customer_id);
             }
         }
-        
+
         return 1;
     }
 
@@ -147,10 +174,11 @@ class CustomerController extends Controller
         return redirect()->route('dashboard');
     }
 
-    public function ban($id) {
+    public function ban($id)
+    {
         $user = User::findOrFail(decrypt($id));
 
-        if($user->banned == 1) {
+        if ($user->banned == 1) {
             $user->banned = 0;
             flash(translate('Customer UnBanned Successfully'))->success();
         } else {
@@ -159,7 +187,25 @@ class CustomerController extends Controller
         }
 
         $user->save();
-        
+
+        return back();
+    }
+
+    public function address_set_default($user_id, $id)
+    {
+
+        Address::where('user_id', $user_id)->update([
+            'set_default' => 0
+        ]);
+
+        // foreach (Auth::user()->addresses as $key => $address) {
+        //     $address->set_default = 0;
+        //     $address->save();
+        // }
+        $address = Address::findOrFail($id);
+        $address->set_default = 1;
+        $address->save();
+
         return back();
     }
 }

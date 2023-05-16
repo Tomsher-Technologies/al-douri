@@ -5,8 +5,7 @@ Route::get('/african/credentials_index', 'AfricanPaymentGatewayController@creden
 
 //Mpesa
 
-Route::prefix('lnmo')->group(function ()
-{
+Route::prefix('lnmo')->group(function () {
   Route::post('mpesa_pay', 'MpesaController@payment_complete')->name('mpesa.pay');
   Route::any('pay', 'MpesaController@mpesa_pay');
   Route::any('validate', 'MpesaController@validation');

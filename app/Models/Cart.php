@@ -9,7 +9,22 @@ use Illuminate\Database\Eloquent\Model;
 class Cart extends Model
 {
     protected $guarded = [];
-    protected $fillable = ['address_id','price','tax','shipping_cost','discount','product_referral_code','coupon_code','coupon_applied','quantity','user_id','temp_user_id','owner_id','product_id','variation'];
+    protected $fillable = [
+        'address_id',
+        'price',
+        'tax',
+        'shipping_cost',
+        'discount',
+        'product_referral_code',
+        'coupon_code',
+        'coupon_applied',
+        'quantity', 'user_id',
+        'temp_user_id',
+        'owner_id',
+        'product_id',
+        'variation',
+        'status',
+    ];
 
     public function user()
     {
@@ -25,4 +40,8 @@ class Cart extends Model
     {
         return $this->belongsTo(Address::class);
     }
+
+    protected $casts = [
+        'created_at' => 'datetime',
+    ];
 }

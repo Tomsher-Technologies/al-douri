@@ -17,13 +17,13 @@ class CouponController extends Controller
      */
     public function index()
     {
-        $coupons = Coupon::where('user_id', User::where('user_type', 'admin')->first()->id)->orderBy('id','desc')->get();
+        $coupons = Coupon::where('user_id', User::where('user_type', 'admin')->first()->id)->orderBy('id', 'desc')->get();
         return view('backend.marketing.coupons.index', compact('coupons'));
     }
 
     public function sellerIndex()
     {
-        $coupons = Coupon::where('user_id', Auth::user()->id)->orderBy('id','desc')->get();
+        $coupons = Coupon::where('user_id', Auth::user()->id)->orderBy('id', 'desc')->get();
         return view('frontend.user.seller.coupons.index', compact('coupons'));
     }
 
@@ -50,7 +50,7 @@ class CouponController extends Controller
      */
     public function store(Request $request)
     {
-        if(count(Coupon::where('code', $request->coupon_code)->get()) > 0){
+        if (count(Coupon::where('code', $request->coupon_code)->get()) > 0) {
             flash(translate('Coupon already exist for this coupon code'))->error();
             return back();
         }
@@ -66,7 +66,7 @@ class CouponController extends Controller
 
     public function sellerStore(Request $request)
     {
-        if(count(Coupon::where('code', $request->coupon_code)->get()) > 0){
+        if (count(Coupon::where('code', $request->coupon_code)->get()) > 0) {
             flash(translate('Coupon already exist for this coupon code'))->error();
             return back();
         }
@@ -118,7 +118,7 @@ class CouponController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if(count(Coupon::where('id', '!=' , $id)->where('code', $request->coupon_code)->get()) > 0){
+        if (count(Coupon::where('id', '!=', $id)->where('code', $request->coupon_code)->get()) > 0) {
             flash(translate('Coupon already exist for this coupon code'))->error();
             return back();
         }
@@ -133,7 +133,7 @@ class CouponController extends Controller
 
     public function sellerUpdate(Request $request, $id)
     {
-        if(count(Coupon::where('id', '!=' , $id)->where('code', $request->coupon_code)->get()) > 0){
+        if (count(Coupon::where('id', '!=', $id)->where('code', $request->coupon_code)->get()) > 0) {
             flash(translate('Coupon already exist for this coupon code'))->error();
             return back();
         }
@@ -141,7 +141,7 @@ class CouponController extends Controller
         $coupon = Coupon::findOrFail($id);
         $this->setCouponData($request, $coupon);
         $coupon->save();
-        
+
         flash(translate('Coupon has been updated successfully'))->success();
         return redirect()->route('seller.coupon.index');
     }
@@ -166,7 +166,8 @@ class CouponController extends Controller
         return redirect()->route('seller.coupon.index');
     }
 
-    public function setCouponData($request, $coupon){
+    public function setCouponData($request, $coupon)
+    {
         if ($request->coupon_type == "product_base") {
             $coupon->type = $request->coupon_type;
             $coupon->code = $request->coupon_code;
@@ -174,14 +175,13 @@ class CouponController extends Controller
             $coupon->discount_type = $request->discount_type;
             $date_var                 = explode(" - ", $request->date_range);
             $coupon->start_date       = strtotime($date_var[0]);
-            $coupon->end_date         = strtotime( $date_var[1]);
+            $coupon->end_date         = strtotime($date_var[1]);
             $cupon_details = array();
-            foreach($request->product_ids as $product_id) {
+            foreach ($request->product_ids as $product_id) {
                 $data['product_id'] = $product_id;
                 array_push($cupon_details, $data);
             }
             $coupon->details = json_encode($cupon_details);
-
         } elseif ($request->coupon_type == "cart_base") {
             $coupon->type             = $request->coupon_type;
             $coupon->code             = $request->coupon_code;
@@ -189,20 +189,22 @@ class CouponController extends Controller
             $coupon->discount_type    = $request->discount_type;
             $date_var                 = explode(" - ", $request->date_range);
             $coupon->start_date       = strtotime($date_var[0]);
-            $coupon->end_date         = strtotime( $date_var[1]);
+            $coupon->end_date         = strtotime($date_var[1]);
             $data                     = array();
             $data['min_buy']          = $request->min_buy;
             $data['max_discount']     = $request->max_discount;
             $coupon->details          = json_encode($data);
         }
 
+        $coupon->one_time_use = $request->one_time_use;
+
         return $coupon;
     }
 
     public function get_coupon_form(Request $request)
     {
-        if($request->coupon_type == "product_base") {
-            if(Auth::user()->user_type == 'seller') {
+        if ($request->coupon_type == "product_base") {
+            if (Auth::user()->user_type == 'seller') {
                 $products = filter_products(\App\Models\Product::where('user_id', Auth::user()->id))->get();
             } else {
                 $admin_id = \App\Models\User::where('user_type', 'admin')->first()->id;
@@ -210,30 +212,27 @@ class CouponController extends Controller
             }
 
             return view('partials.coupons.product_base_coupon', compact('products'));
-        }
-        elseif($request->coupon_type == "cart_base"){
+        } elseif ($request->coupon_type == "cart_base") {
             return view('partials.coupons.cart_base_coupon');
         }
     }
 
     public function get_coupon_form_edit(Request $request)
     {
-        if($request->coupon_type == "product_base") {
+        if ($request->coupon_type == "product_base") {
             $coupon = Coupon::findOrFail($request->id);
 
-            if(Auth::user()->user_type == 'seller') {
+            if (Auth::user()->user_type == 'seller') {
                 $products = filter_products(\App\Models\Product::where('user_id', Auth::user()->id))->get();
             } else {
                 $admin_id = \App\Models\User::where('user_type', 'admin')->first()->id;
                 $products = filter_products(\App\Models\Product::where('user_id', $admin_id))->get();
             }
 
-            return view('partials.coupons.product_base_coupon_edit',compact('coupon', 'products'));
-        }
-        elseif($request->coupon_type == "cart_base"){
+            return view('partials.coupons.product_base_coupon_edit', compact('coupon', 'products'));
+        } elseif ($request->coupon_type == "cart_base") {
             $coupon = Coupon::findOrFail($request->id);
-            return view('partials.coupons.cart_base_coupon_edit',compact('coupon'));
+            return view('partials.coupons.cart_base_coupon_edit', compact('coupon'));
         }
     }
-
 }

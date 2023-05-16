@@ -28,7 +28,6 @@ class PurchaseHistoryController extends Controller
             });
         }
         return new PurchaseHistoryMiniCollection($order_query->where('user_id', auth()->user()->id)->latest()->paginate(5));
-
     }
 
     public function details($id)

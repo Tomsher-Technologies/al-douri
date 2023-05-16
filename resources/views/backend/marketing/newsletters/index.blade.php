@@ -41,7 +41,7 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-from-label" for="name">{{translate('Newsletter content')}}</label>
                         <div class="col-sm-10">
-                            <textarea rows="8" class="form-control aiz-text-editor" data-buttons='[["font", ["bold", "underline", "italic"]],["para", ["ul", "ol"]], ["insert", ["link", "picture"]],["view", ["undo","redo"]]]' name="content" required></textarea>
+                            <textarea rows="8" class="form-control aiz-text-editor" data-buttons='[["font", ["bold", "underline", "italic"]],["para", ["ul", "ol"]], ["insert", ["link", "picture"]],["view", ["undo","redo"]],["view", ["fullscreen", "codeview"]]]' name="content"></textarea>
                         </div>
                     </div>
                     <div class="form-group mb-0 text-right">
