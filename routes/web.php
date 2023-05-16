@@ -272,7 +272,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('invoice/{order_id}', [InvoiceController::class, 'invoice_download'])->name('invoice.download');
 
-    Route::resource('orders', 'OrderController');
+    Route::resource('orders', OrderController::class);
     Route::get('/orders/destroy/{id}', [OrderController::class, 'destroy'])->name('orders.destroy');
     Route::post('/orders/details', [OrderController::class, 'order_details'])->name('orders.details');
     Route::post('/orders/update_delivery_status', [OrderController::class, 'update_delivery_status'])->name('orders.update_delivery_status');
@@ -284,7 +284,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::resource('/reviews', ReviewController::class);
 
-    Route::resource('/withdraw_requests', 'SellerWithdrawRequestController');
+    Route::resource('/withdraw_requests', SellerWithdrawRequestController::class);
     Route::get('/withdraw_requests_all', [SellerWithdrawRequestController::class, 'request_index'])->name('withdraw_requests_all');
     Route::post('/withdraw_request/payment_modal', [SellerWithdrawRequestController::class, 'payment_modal'])->name('withdraw_request.payment_modal');
     Route::post('/withdraw_request/message_modal', [SellerWithdrawRequestController::class, 'message_modal'])->name('withdraw_request.message_modal');
@@ -295,7 +295,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('messages', 'MessageController');
 
     //Product Bulk Upload
-    // Route::get('/product-bulk-upload/index', [ProductBulkUploadController::class, 'index'])->name('product_bulk_upload.index');
+    Route::get('/product-bulk-upload/index', [ProductBulkUploadController::class, 'index'])->name('product_bulk_upload.index');
     // Route::post('/bulk-product-upload', [ProductBulkUploadController::class, 'bulk_upload'])->name('bulk_product_upload');
     // Route::get('/product-csv-download/{type}', [ProductBulkUploadController::class, 'import_product'])->name('product_csv.download');
     // Route::get('/vendor-product-csv-download/{id}', [ProductBulkUploadController::class, 'import_vendor_product'])->name('import_vendor_product.download');
@@ -321,7 +321,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/coupon/get_form_edit', [CouponController::class, 'get_coupon_form_edit'])->name('coupon.get_coupon_form_edit');
 });
 
-Route::resource('shops', 'ShopController');
+Route::resource('shops', ShopController::class);
 Route::get('/track-your-order', [HomeController::class, 'trackOrder'])->name('orders.track');
 
 Route::get('/instamojo/payment/pay-success', [InstamojoController::class, 'success'])->name('instamojo.success');

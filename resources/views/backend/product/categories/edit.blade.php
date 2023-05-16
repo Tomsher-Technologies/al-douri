@@ -73,34 +73,40 @@
                             </select>
                         </div>
                     </div> --}}
-                        {{-- <div class="form-group row">
-                        <label class="col-md-3 col-form-label" for="signinSrEmail">{{translate('Banner')}} <small>({{ translate('200x200') }})</small></label>
-                        <div class="col-md-9">
-                            <div class="input-group" data-toggle="aizuploader" data-type="image">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="signinSrEmail">{{ translate('Image') }}
+                                <small>({{ translate('200x200') }})</small></label>
+                            <div class="col-md-9">
+                                <div class="input-group" data-toggle="aizuploader" data-type="image">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text bg-soft-secondary font-weight-medium">
+                                            {{ translate('Browse') }}</div>
+                                    </div>
+                                    <div class="form-control file-amount">{{ translate('Choose File') }}</div>
+                                    <input type="hidden" name="banner" class="selected-files"
+                                        value="{{ $category->banner }}">
                                 </div>
-                                <div class="form-control file-amount">{{ translate('Choose File') }}</div>
-                                <input type="hidden" name="banner" class="selected-files" value="{{ $category->banner }}">
-                            </div>
-                            <div class="file-preview box sm">
+                                <div class="file-preview box sm">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-md-3 col-form-label" for="signinSrEmail">{{translate('Icon')}} <small>({{ translate('32x32') }})</small></label>
-                        <div class="col-md-9">
-                            <div class="input-group" data-toggle="aizuploader" data-type="image">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse')}}</div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="signinSrEmail">{{ translate('Icon') }}
+                                <small>({{ translate('32x32') }})</small></label>
+                            <div class="col-md-9">
+                                <div class="input-group" data-toggle="aizuploader" data-type="image">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text bg-soft-secondary font-weight-medium">
+                                            {{ translate('Browse') }}</div>
+                                    </div>
+                                    <div class="form-control file-amount">{{ translate('Choose File') }}</div>
+                                    <input type="hidden" name="icon" class="selected-files"
+                                        value="{{ $category->icon }}">
                                 </div>
-                                <div class="form-control file-amount">{{ translate('Choose File') }}</div>
-                                <input type="hidden" name="icon" class="selected-files" value="{{ $category->icon }}">
-                            </div>
-                            <div class="file-preview box sm">
+                                <div class="file-preview box sm">
+                                </div>
                             </div>
                         </div>
-                    </div> --}}
                         <div class="form-group row">
                             <label class="col-md-3 col-form-label">{{ translate('Meta Title') }}</label>
                             <div class="col-md-9">
@@ -119,20 +125,22 @@
                             <label class="col-md-3 col-form-label">{{ translate('OG Title') }}</label>
                             <div class="col-md-9">
                                 <input type="text" class="form-control" name="og_title"
-                                    value="{{ $category->getTranslation('og_title', $lang)  }}" placeholder="{{ translate('OG Title') }}">
+                                    value="{{ $category->getTranslation('og_title', $lang) }}"
+                                    placeholder="{{ translate('OG Title') }}">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-md-3 col-form-label">{{ translate('OG Description') }}</label>
                             <div class="col-md-9">
-                                <textarea name="og_description" rows="5" class="form-control">{{ $category->getTranslation('og_description', $lang)  }}</textarea>
+                                <textarea name="og_description" rows="5" class="form-control">{{ $category->getTranslation('og_description', $lang) }}</textarea>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-md-3 col-form-label">{{ translate('Twitter Title') }}</label>
                             <div class="col-md-9">
                                 <input type="text" class="form-control" name="twitter_title"
-                                    value="{{ $category->getTranslation('twitter_title', $lang) }}" placeholder="{{ translate('Twitter Title') }}">
+                                    value="{{ $category->getTranslation('twitter_title', $lang) }}"
+                                    placeholder="{{ translate('Twitter Title') }}">
                             </div>
                         </div>
                         <div class="form-group row">

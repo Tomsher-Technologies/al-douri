@@ -42,6 +42,12 @@
 
     $(document).ready(function(){
         $('.aiz-selectpicker').selectpicker();
-        $('.aiz-date-range').daterangepicker();
+
+        var date = new Date();
+        var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+        $('.aiz-date-range').daterangepicker({
+            minDate: today
+        });
     });
 </script>

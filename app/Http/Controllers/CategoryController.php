@@ -145,8 +145,8 @@ class CategoryController extends Controller
             $category->order_level = $request->order_level;
         }
         // $category->digital = $request->digital;
-        // $category->banner = $request->banner;
-        // $category->icon = $request->icon;
+        $category->banner = $request->banner;
+        $category->icon = $request->icon;
 
         $category->meta_title = $request->meta_title ?? $request->name;
         $category->meta_description = $request->meta_description;

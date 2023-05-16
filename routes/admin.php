@@ -12,6 +12,7 @@
  */
 
 use App\Http\Controllers\Admin\AbandonedCartController;
+use App\Http\Controllers\Admin\ShopsController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AizUploadController;
 use App\Http\Controllers\AttributeController;
@@ -84,7 +85,14 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::post('/products/get_products_by_subcategory', [ProductController::class, 'get_products_by_subcategory'])->name('products.get_products_by_subcategory');
     // Route::post('/bulk-product-delete', [ProductController::class, 'bulk_product_delete'])->name('bulk-product-delete');
 
-    // Route::resource('sellers', 'SellerController');
+
+    Route::post('/bulk-shop-delete', [ShopsController::class, 'bulk_shop_delete'])->name('bulk-shop-delete');
+    Route::get('/shops/destroy/{id}', [ShopsController::class, 'destroy'])->name('admin.shops.destroy');
+    Route::resource('shops', ShopsController::class, [
+        'as' => 'admin'
+    ]);
+
+    // Route::resource('sellers', SellerController::class);
     // Route::get('sellers_ban/{id}', [SellerController::class, 'ban'])->name('sellers.ban');
     // Route::get('/sellers/destroy/{id}', [SellerController::class, 'destroy'])->name('sellers.destroy');
     // Route::post('/bulk-seller-delete', [SellerController::class, 'bulk_seller_delete'])->name('bulk-seller-delete');

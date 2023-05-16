@@ -42,13 +42,15 @@
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6",
+        "bennett-treptow/laravel-migration-generator": "^4.3",
         "beyondcode/laravel-dump-server": "^1.0",
+        "facade/ignition": "^2.3.6",
         "filp/whoops": "^2.0",
         "fzaninotto/faker": "^1.4",
+        "laracasts/generators": "^2.0",
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^5.0",
-        "phpunit/phpunit": "^9.0",
-        "facade/ignition": "^2.3.6"
+        "phpunit/phpunit": "^9.0"
     },
     "autoload": {
         "classmap": [
