@@ -450,6 +450,15 @@
                         </ul>
                     </li>
                 @endif
+                @if (Auth::user()->user_type == 'admin' || in_array('25', json_decode(Auth::user()->staff->role->permissions)))
+                    <li class="aiz-side-nav-item">
+                        <a href="{{ route('admin.shops.index') }}"
+                            class="aiz-side-nav-link {{ areActiveRoutes(['admin.shops.index']) }}">
+                            <i class="las la-store aiz-side-nav-icon"></i>
+                            <span class="aiz-side-nav-text">{{ translate('Shops') }}</span>
+                        </a>
+                    </li>
+                @endif
                 @if (Auth::user()->user_type == 'admin' || in_array('22', json_decode(Auth::user()->staff->role->permissions)))
                     <li class="aiz-side-nav-item">
                         <a href="{{ route('uploaded-files.index') }}"

@@ -91,6 +91,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::resource('shops', ShopsController::class, [
         'as' => 'admin'
     ]);
+    Route::post('/shops/delete/', [ShopsController::class, 'delete'])->name('admin.shops.delete');
+    Route::get('/shops/edit/{id}', [ShopsController::class, 'edit'])->name('admin.shops.edit');
+    Route::post('/shops/update/{id}', [ShopsController::class, 'update'])->name('admin.shops.update');
 
     // Route::resource('sellers', SellerController::class);
     // Route::get('sellers_ban/{id}', [SellerController::class, 'ban'])->name('sellers.ban');

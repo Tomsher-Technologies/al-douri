@@ -26,15 +26,14 @@
                         {{ translate('Bulk Action') }}
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="#"
-                            onclick="bulk_delete()">{{ translate('Delete selection') }}</a>
+                        <a class="dropdown-item" href="#" onclick="bulk_delete()">{{ translate('Delete selection') }}</a>
                     </div>
                 </div>
 
                 <div class="col-md-3">
                     <div class="form-group mb-0">
                         <input type="text" class="form-control" id="search"
-                            name="search"@isset($sort_search) value="{{ $sort_search }}" @endisset
+                            name="search" @isset($sort_search) value="{{ $sort_search }}" @endisset
                             placeholder="{{ translate('Type name or email & Enter') }}">
                     </div>
                 </div>
@@ -93,11 +92,7 @@
                                             <i class="las la-edit"></i>
                                         </a>
 
-                                        <a href="#"
-                                            class="btn btn-soft-danger btn-icon btn-circle btn-sm confirm-delete"
-                                            data-href="{{ route('admin.shops.destroy', $shop) }}"
-                                            title="{{ translate('Delete') }}">
-                                            <i class="las la-trash"></i>
+                                        <a href="#" class="btn btn-soft-danger btn-icon btn-circle btn-sm" title="{{ translate('Delete') }}" onclick="single_delete({{$shop->id}})"> <i class="las la-trash"></i>
                                         </a>
 
 
@@ -120,7 +115,13 @@
 @endsection
 
 @section('script')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="text/javascript">
+         $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
         $(document).on("change", ".check-all", function() {
             if (this.checked) {
                 // Iterate each checkbox
@@ -140,23 +141,78 @@
         }
 
         function bulk_delete() {
-            var data = new FormData($('#sort_sellers')[0]);
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: "{{ route('bulk-shop-delete') }}",
-                type: 'POST',
-                data: data,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    if (response == 1) {
-                        location.reload();
-                    }
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    var data = new FormData($('#sort_sellers')[0]);
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        url: "{{ route('bulk-shop-delete') }}",
+                        type: 'POST',
+                        data: data,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function(response) {
+                            if (response == 1) {
+                                Swal.fire(
+                                    'Deleted!',
+                                    'Successfully deleted.',
+                                    'success'
+                                )
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 400);
+                            }
+                        }
+                    });
                 }
-            });
+            })
+        }
+
+        function single_delete(shop_id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                if (result.isConfirmed) {
+                  
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        url: "{{ route('admin.shops.delete') }}",
+                        type: 'POST',
+                        data: 'id='+ shop_id,
+                        success: function(response) {
+                            if (response == 1) {
+                                Swal.fire(
+                                    'Deleted!',
+                                    'Successfully deleted.',
+                                    'success'
+                                )
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 400);
+                            }
+                        }
+                    });
+                }
+            })
         }
     </script>
 @endsection
