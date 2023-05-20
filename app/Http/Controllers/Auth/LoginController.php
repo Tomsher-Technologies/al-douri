@@ -189,11 +189,11 @@ class LoginController extends Controller
             Session::forget('temp_user_id');
         }
 
-        if (auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'staff') {
+        if (auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'staff' || auth()->user()->user_type == 'shop') {
+            
             // CoreComponentRepository::instantiateShopRepository();
             return redirect()->route('admin.dashboard');
         } else {
-
             if (session('link') != null) {
                 return redirect(session('link'));
             } else {
