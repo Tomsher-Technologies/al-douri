@@ -30,4 +30,9 @@ class OrderDetail extends Model
     {
         return $this->hasMany(AffiliateLog::class);
     }
+
+    public function order_transfer()
+    {
+        return $this->hasOne(OrderTransfers::class);
+    }
 }

@@ -245,6 +245,28 @@
                             </li>
                         @endif
 
+                        @if (Auth::user()->user_type == 'shop' )
+                            <li class="aiz-side-nav-item">
+                                <a href="javascript:void(0);" class="aiz-side-nav-link">
+                                    <span class="aiz-side-nav-text">{{ translate('Transfer Orders') }}</span>
+                                    <span class="aiz-side-nav-arrow"></span>
+                                </a>
+                                <ul class="aiz-side-nav-list level-3">
+                                    <li class="aiz-side-nav-item">
+                                        <a href="{{ route('transferred_orders.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['transferred_orders.index']) }}" >
+                                            <span class="aiz-side-nav-text">{{ translate('Outgoing Orders') }}</span>
+                                        </a>
+                                    </li>
+                                    <li class="aiz-side-nav-item">
+                                        <a href="{{ route('transferred_orders.index') }}" class="aiz-side-nav-link">
+                                            <span class="aiz-side-nav-text">{{ translate('Incoming Orders') }}</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                        @endif
+
                         {{-- @if (Auth::user()->user_type == 'admin' || (Auth::user()->user_type == 'staff' && in_array('4', json_decode(Auth::user()->staff->role->permissions))))
                             <li class="aiz-side-nav-item">
                                 <a href="{{ route('inhouse_orders.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['inhouse_orders.index', 'inhouse_orders.show'])}}" >

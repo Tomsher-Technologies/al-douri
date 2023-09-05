@@ -50,4 +50,9 @@ class Order extends Model
     {
         return $this->hasMany(ProxyPayment::class)->select('reference_id');
     }
+
+    public function order_transfer()
+    {
+        return $this->hasMany(OrderTransfers::class);
+    }
 }

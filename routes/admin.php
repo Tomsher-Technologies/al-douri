@@ -217,6 +217,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     // All Orders
     Route::get('/all_orders', [OrderController::class, 'all_orders'])->name('all_orders.index');
     Route::get('/all_orders/{id}/show', [OrderController::class, 'all_orders_show'])->name('all_orders.show');
+    Route::post('/transfer-product', [OrderController::class, 'transferProduct'])->name('transfer-product');
+
+    Route::get('/transferred_orders', [OrderController::class, 'transferred_orders'])->name('transferred_orders.index');
 
     // Inhouse Orders
     Route::get('/inhouse-orders', [OrderController::class, 'admin_orders'])->name('inhouse_orders.index');

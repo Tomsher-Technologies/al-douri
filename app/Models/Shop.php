@@ -25,4 +25,10 @@ class Shop extends Model
   {
     return $this->belongsToMany(User::class);
   }
+
+  public function order_transfer()
+  {
+      return $this->hasMany(OrderTransfers::class);
+  }
+
 }
