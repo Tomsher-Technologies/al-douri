@@ -605,45 +605,7 @@
                         </div>
                     </div>
 
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0 h6">{{ translate('Flash Deal') }}</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-group mb-3">
-                                <label for="name">
-                                    {{ translate('Add To Flash') }}
-                                </label>
-                                <select class="form-control aiz-selectpicker" name="flash_deal_id" id="flash_deal">
-                                    <option value="">Choose Flash Title</option>
-                                    @foreach (\App\Models\FlashDeal::where('status', 1)->get() as $flash_deal)
-                                        <option value="{{ $flash_deal->id }}">
-                                            {{ $flash_deal->title }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="form-group mb-3">
-                                <label for="name">
-                                    {{ translate('Discount') }}
-                                </label>
-                                <input type="number" name="flash_discount" value="0" min="0"
-                                    step="1" class="form-control">
-                            </div>
-                            <div class="form-group mb-3">
-                                <label for="name">
-                                    {{ translate('Discount Type') }}
-                                </label>
-                                <select class="form-control aiz-selectpicker" name="flash_discount_type"
-                                    id="flash_discount_type">
-                                    <option value="">Choose Discount Type</option>
-                                    <option value="amount">{{ translate('Flat') }}</option>
-                                    <option value="percent">{{ translate('Percent') }}</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
+   
 
                     <div class="card">
                         <div class="card-header">
@@ -666,33 +628,7 @@
                         </div>
                     </div>
 
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0 h6">{{ translate('VAT & Tax') }}</h5>
-                        </div>
-                        <div class="card-body">
-                            @foreach (\App\Models\Tax::where('tax_status', 1)->get() as $tax)
-                                <label for="name">
-                                    {{ $tax->name }}
-                                    <input type="hidden" value="{{ $tax->id }}" name="tax_id[]">
-                                </label>
 
-                                <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        <input type="number" lang="en" min="0" value="0"
-                                            step="0.01" placeholder="{{ translate('Tax') }}" name="tax[]"
-                                            class="form-control" required>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <select class="form-control aiz-selectpicker" name="tax_type[]">
-                                            <option value="amount">{{ translate('Flat') }}</option>
-                                            <option value="percent">{{ translate('Percent') }}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
 
                 </div>
                 <div class="col-12">

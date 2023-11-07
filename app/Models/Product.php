@@ -30,7 +30,7 @@ class Product extends Model
         'thumbnail_img',
     ];
 
-    protected $with = ['product_translations', 'taxes'];
+    protected $with = ['product_translations'];
 
     public function getTranslation($field = '', $lang = false)
     {
@@ -88,11 +88,6 @@ class Product extends Model
     public function stocks()
     {
         return $this->hasMany(ProductStock::class);
-    }
-
-    public function taxes()
-    {
-        return $this->hasMany(ProductTax::class);
     }
 
     public function flash_deal_product()

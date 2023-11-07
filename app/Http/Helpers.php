@@ -136,9 +136,9 @@ if (!function_exists('verified_sellers_id')) {
 if (!function_exists('get_system_default_currency')) {
     function get_system_default_currency()
     {
-        return Cache::remember('system_default_currency', 86400, function () {
-            return Currency::findOrFail(get_setting('system_default_currency'));
-        });
+        // return Cache::remember('system_default_currency', 86400, function () {
+        //     return Currency::findOrFail(get_setting('system_default_currency'));
+        // });
     }
 }
 
@@ -158,10 +158,10 @@ if (!function_exists('convert_price')) {
 if (!function_exists('currency_symbol')) {
     function currency_symbol()
     {
-        if (Session::has('currency_symbol')) {
-            return Session::get('currency_symbol');
-        }
-        return get_system_default_currency()->symbol;
+        // if (Session::has('currency_symbol')) {
+        //     return Session::get('currency_symbol');
+        // }
+        // return get_system_default_currency()->symbol;
     }
 }
 
@@ -856,11 +856,12 @@ if (!function_exists('calculateCommissionAffilationClubPoint')) {
 if (!function_exists('addon_is_activated')) {
     function addon_is_activated($identifier, $default = null)
     {
-        $addons = Cache::remember('addons', 86400, function () {
-            return Addon::all();
-        });
+        // $addons = Cache::remember('addons', 86400, function () {
+        //     return Addon::all();
+        // });
 
-        $activation = $addons->where('unique_identifier', $identifier)->where('activated', 1)->first();
+        // $activation = $addons->where('unique_identifier', $identifier)->where('activated', 1)->first();
+        $activation = null;
         return $activation == null ? false : true;
     }
 }

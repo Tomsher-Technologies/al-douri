@@ -101,6 +101,7 @@
 
                     <input type="hidden" name="lat" class="form-control" id="us3-lat" />
                     <input type="hidden" name="long" class="form-control" id="us3-lon" />
+                   <input type="number" name="long" class="form-control" id="us3-radius" />
 
                     <div class="form-group mb-0 text-right">
                         <button type="submit" class="btn btn-primary">{{ translate('Save') }}</button>

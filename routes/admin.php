@@ -20,45 +20,31 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\BusinessSettingsController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CityController;
-use App\Http\Controllers\CommissionController;
 use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\CustomerBulkUploadController;
 use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\CustomerPackageController;
-use App\Http\Controllers\CustomerProductController;
-use App\Http\Controllers\FlashDealController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\PickupPointController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\SellerController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\StateController;
 use App\Http\Controllers\SubscriberController;
-use App\Http\Controllers\SupportTicketController;
-use App\Http\Controllers\TaxController;
-use App\Http\Controllers\UpdateController;
 use App\Http\Controllers\WebsiteController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/test', function () {
     return view('backend.test');
 });
-
-
-Route::post('/update', [UpdateController::class, 'step0'])->name('update');
-Route::get('/update/step1', [UpdateController::class, 'step1'])->name('update.step1');
-Route::get('/update/step2', [UpdateController::class, 'step2'])->name('update.step2');
 
 Route::get('/admin', [AdminController::class, 'admin_dashboard'])->name('admin.dashboard')->middleware(['auth', 'admin']);
 
@@ -76,7 +62,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     // Route::get('/products/admin', [ProductController::class, 'admin_products'])->name('products.admin');
     // Route::get('/products/seller', [ProductController::class, 'seller_products'])->name('products.seller');
     Route::get('/products/all', [ProductController::class, 'all_products'])->name('products.all');
-    // Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
+    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
     Route::get('/products/admin/{id}/edit', [ProductController::class, 'admin_product_edit'])->name('products.admin.edit');
     Route::get('/products/seller/{id}/edit', [ProductController::class, 'seller_product_edit'])->name('products.seller.edit');
     Route::post('/products/todays_deal', [ProductController::class, 'updateTodaysDeal'])->name('products.todays_deal');
@@ -94,18 +80,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::post('/shops/delete/', [ShopsController::class, 'delete'])->name('admin.shops.delete');
     Route::get('/shops/edit/{id}', [ShopsController::class, 'edit'])->name('admin.shops.edit');
     Route::post('/shops/update/{id}', [ShopsController::class, 'update'])->name('admin.shops.update');
-
-    // Route::resource('sellers', SellerController::class);
-    // Route::get('sellers_ban/{id}', [SellerController::class, 'ban'])->name('sellers.ban');
-    // Route::get('/sellers/destroy/{id}', [SellerController::class, 'destroy'])->name('sellers.destroy');
-    // Route::post('/bulk-seller-delete', [SellerController::class, 'bulk_seller_delete'])->name('bulk-seller-delete');
-    // Route::get('/sellers/view/{id}/verification', [SellerController::class, 'show_verification_request'])->name('sellers.show_verification_request');
-    // Route::get('/sellers/approve/{id}', [SellerController::class, 'approve_seller'])->name('sellers.approve');
-    // Route::get('/sellers/reject/{id}', [SellerController::class, 'reject_seller'])->name('sellers.reject');
-    // Route::get('/sellers/login/{id}', [SellerController::class, 'login'])->name('sellers.login');
-    // Route::post('/sellers/payment_modal', [SellerController::class, 'payment_modal'])->name('sellers.payment_modal');
-    // Route::get('/seller/payments', [PaymentController::class, 'payment_histories'])->name('sellers.payment_histories');
-    // Route::get('/seller/payments/show/{id}', [PaymentController::class, 'show'])->name('sellers.payment_history');
 
     Route::resource('customers', CustomerController::class);
     Route::get('customers_ban/{customer}', [CustomerController::class, 'ban'])->name('customers.ban');
@@ -157,10 +131,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     // Route::post('/currency/update_status', [CurrencyController::class, 'update_status'])->name('currency.update_status');
 
     //Tax
-    Route::resource('tax', TaxController::class);
-    Route::get('/tax/edit/{id}', [TaxController::class, 'edit'])->name('tax.edit');
-    Route::get('/tax/destroy/{id}', [TaxController::class, 'destroy'])->name('tax.destroy');
-    Route::post('tax-status', [TaxController::class, 'change_tax_status'])->name('taxes.tax-status');
+    // Route::resource('tax', TaxController::class);
+    // Route::get('/tax/edit/{id}', [TaxController::class, 'edit'])->name('tax.edit');
+    // Route::get('/tax/destroy/{id}', [TaxController::class, 'destroy'])->name('tax.destroy');
+    // Route::post('tax-status', [TaxController::class, 'change_tax_status'])->name('taxes.tax-status');
 
     Route::get('/verification/form', [BusinessSettingsController::class, 'seller_verification_form'])->name('seller_verification_form.index');
     Route::post('/verification/form', [BusinessSettingsController::class, 'seller_verification_form_update'])->name('seller_verification_form.update');
@@ -198,14 +172,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::resource('staffs', StaffController::class);
     Route::get('/staffs/destroy/{id}', [StaffController::class, 'destroy'])->name('staffs.destroy');
 
-    Route::resource('flash_deals', FlashDealController::class);
-    Route::get('/flash_deals/edit/{id}', [FlashDealController::class, 'edit'])->name('flash_deals.edit');
-    Route::get('/flash_deals/destroy/{id}', [FlashDealController::class, 'destroy'])->name('flash_deals.destroy');
-    Route::post('/flash_deals/update_status', [FlashDealController::class, 'update_status'])->name('flash_deals.update_status');
-    Route::post('/flash_deals/update_featured', [FlashDealController::class, 'update_featured'])->name('flash_deals.update_featured');
-    Route::post('/flash_deals/product_discount', [FlashDealController::class, 'product_discount'])->name('flash_deals.product_discount');
-    Route::post('/flash_deals/product_discount_edit', [FlashDealController::class, 'product_discount_edit'])->name('flash_deals.product_discount_edit');
-
     //Subscribers
     Route::get('/subscribers', [SubscriberController::class, 'index'])->name('subscribers.index');
     Route::get('/subscribers/destroy/{id}', [SubscriberController::class, 'destroy'])->name('subscriber.destroy');
@@ -238,8 +204,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::get('/orders/destroy/{id}', [OrderController::class, 'destroy'])->name('orders.destroy');
     Route::post('/bulk-order-delete', [OrderController::class, 'bulk_order_delete'])->name('bulk-order-delete');
 
-    Route::post('/pay_to_seller', [CommissionController::class, 'pay_to_seller'])->name('commissions.pay_to_seller');
-
+    
     //Reports
     Route::get('/stock_report', [ReportController::class, 'stock_report'])->name('stock_report.index');
     Route::get('/in_house_sale_report', [ReportController::class, 'in_house_sale_report'])->name('in_house_sale_report.index');
@@ -266,23 +231,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
     Route::post('/reviews/published', [ReviewController::class, 'updatePublished'])->name('reviews.published');
 
-    //Support_Ticket
-    // Route::get('support_ticket/', [SupportTicketController::class, 'admin_index'])->name('support_ticket.admin_index');
-    // Route::get('support_ticket/{id}/show', [SupportTicketController::class, 'admin_show'])->name('support_ticket.admin_show');
-    // Route::post('support_ticket/reply', [SupportTicketController::class, 'admin_store'])->name('support_ticket.admin_store');
-
-    //Pickup_Points
-    // Route::resource('pick_up_points', PickupPointController::class);
-    // Route::get('/pick_up_points/edit/{id}', [PickupPointController::class, 'edit'])->name('pick_up_points.edit');
-    // Route::get('/pick_up_points/destroy/{id}', [PickupPointController::class, 'destroy'])->name('pick_up_points.destroy');
-
-    //conversation of seller customer
-    // Route::get('conversations', [ConversationController::class, 'admin_index'])->name('conversations.admin_index');
-    // Route::get('conversations/{id}/show', [ConversationController::class, 'admin_show'])->name('conversations.admin_show');
-
-    Route::post('/sellers/profile_modal', [SellerController::class, 'profile_modal'])->name('sellers.profile_modal');
-    Route::post('/sellers/approved', [SellerController::class, 'updateApproved'])->name('sellers.approved');
-
     Route::resource('attributes', AttributeController::class);
     Route::get('/attributes/edit/{id}', [AttributeController::class, 'edit'])->name('attributes.edit');
     Route::get('/attributes/destroy/{id}', [AttributeController::class, 'destroy'])->name('attributes.destroy');
@@ -307,16 +255,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::post('/bulk-user-upload', [CustomerBulkUploadController::class, 'user_bulk_upload'])->name('bulk_user_upload');
     Route::post('/bulk-customer-upload', [CustomerBulkUploadController::class, 'customer_bulk_file'])->name('bulk_customer_upload');
     Route::get('/user', [CustomerBulkUploadController::class, 'pdf_download_user'])->name('pdf.download_user');
-    //Customer Package
-
-    Route::resource('customer_packages', CustomerPackageController::class);
-    Route::get('/customer_packages/edit/{id}', [CustomerPackageController::class, 'edit'])->name('customer_packages.edit');
-    Route::get('/customer_packages/destroy/{id}', [CustomerPackageController::class, 'destroy'])->name('customer_packages.destroy');
-
-    //Classified Products
-    Route::get('/classified_products', [CustomerProductController::class, 'customer_product_index'])->name('classified_products');
-    Route::post('/classified_products/published', [CustomerProductController::class, 'updatePublished'])->name('classified_products.published');
-
+ 
     //Shipping Configuration
     Route::get('/shipping_configuration', [BusinessSettingsController::class, 'shipping_configuration'])->name('shipping_configuration.index');
     Route::post('/shipping_configuration/update', [BusinessSettingsController::class, 'shipping_configuration_update'])->name('shipping_configuration.update');

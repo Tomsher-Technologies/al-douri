@@ -48,87 +48,16 @@ class RouteServiceProvider extends ServiceProvider
     
      $this->mapRefundRoutes();
     
-     $this->mapClubPointsRoutes();
     
      $this->mapOtpRoutes();
     
-     $this->mapOfflinePaymentRoutes();
-    
-     $this->mapAfricanPaymentGatewayRoutes();
-    
      $this->mapPaytmRoutes();
-    
-     $this->mapPosRoutes();
-    
-     $this->mapSellerPackageRoutes();
-    
-     $this->mapDeliveryBoyRoutes();
-    
-     $this->mapAuctionRoutes();
-
-     $this->mapWholesaleRoutes();
     
      $this->mapWebRoutes();
 
     // $this->mapInstallRoutes();
 
     //$this->mapUpdateRoutes();
-  }
-
-  /**
-   * Define the "b2b" routes for the application.
-   *
-   * These routes all receive session state, CSRF protection, etc.
-   *
-   * @return void
-   */
-  protected function mapWholesaleRoutes()
-  {
-    Route::middleware('web')
-       ->namespace($this->namespace)
-       ->group(base_path('routes/wholesale.php'));
-  }
-
-  /**
-   * Define the "delivery boy" routes for the application.
-   *
-   * These routes all receive session state, CSRF protection, etc.
-   *
-   * @return void
-   */
-  protected function mapDeliveryBoyRoutes()
-  {
-    Route::middleware('web')
-       ->namespace($this->namespace)
-       ->group(base_path('routes/delivery_boy.php'));
-  }
-
-    /**
-   * Define the "auction" routes for the application.
-   *
-   * These routes all receive session state, CSRF protection, etc.
-   *
-   * @return void
-   */
-  protected function mapAuctionRoutes()
-  {
-    Route::middleware('web')
-       ->namespace($this->namespace)
-       ->group(base_path('routes/auction.php'));
-  }
-
-  /**
-   * Define the "seller package" routes for the application.
-   *
-   * These routes all receive session state, CSRF protection, etc.
-   *
-   * @return void
-   */
-  protected function mapSellerPackageRoutes()
-  {
-    Route::middleware('web')
-       ->namespace($this->namespace)
-       ->group(base_path('routes/seller_package.php'));
   }
 
   /**
@@ -152,40 +81,11 @@ class RouteServiceProvider extends ServiceProvider
    *
    * @return void
    */
-  protected function mapOfflinePaymentRoutes()
-  {
-    Route::middleware('web')
-       ->namespace($this->namespace)
-       ->group(base_path('routes/offline_payment.php'));
-  }
-
-
-  /**
-   * Define the "offline payment" routes for the application.
-   *
-   * These routes all receive session state, CSRF protection, etc.
-   *
-   * @return void
-   */
   protected function mapPaytmRoutes()
   {
     Route::middleware('web')
        ->namespace($this->namespace)
        ->group(base_path('routes/paytm.php'));
-  }
-
-  /**
-   * Define the "offline payment" routes for the application.
-   *
-   * These routes all receive session state, CSRF protection, etc.
-   *
-   * @return void
-   */
-  protected function mapAfricanPaymentGatewayRoutes()
-  {
-    Route::middleware('web')
-       ->namespace($this->namespace)
-       ->group(base_path('routes/african_pg.php'));
   }
 
   /**
@@ -202,19 +102,7 @@ class RouteServiceProvider extends ServiceProvider
        ->group(base_path('routes/refund_request.php'));
   }
 
-  /**
-   * Define the "club points" routes for the application.
-   *
-   * These routes all receive session state, CSRF protection, etc.
-   *
-   * @return void
-   */
-  protected function mapClubPointsRoutes()
-  {
-    Route::middleware('web')
-       ->namespace($this->namespace)
-       ->group(base_path('routes/club_points.php'));
-  }
+
 
   /**
    * Define the "OTP System" routes for the application.
@@ -228,20 +116,6 @@ class RouteServiceProvider extends ServiceProvider
     Route::middleware('web')
        ->namespace($this->namespace)
        ->group(base_path('routes/otp.php'));
-  }
-
-  /**
-   * Define the "POS System" routes for the application.
-   *
-   * These routes all receive session state, CSRF protection, etc.
-   *
-   * @return void
-   */
-  protected function mapPosRoutes()
-  {
-    Route::middleware('web')
-       ->namespace($this->namespace)
-       ->group(base_path('routes/pos.php'));
   }
 
   /**

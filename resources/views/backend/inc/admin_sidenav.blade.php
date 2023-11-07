@@ -579,14 +579,7 @@
                             <span class="aiz-side-nav-arrow"></span>
                         </a>
                         <ul class="aiz-side-nav-list level-2">
-                            @if (Auth::user()->user_type == 'admin' || (Auth::user()->user_type == 'staff' && in_array('2', json_decode(Auth::user()->staff->role->permissions))))
-                                <li class="aiz-side-nav-item">
-                                    <a href="{{ route('flash_deals.index') }}"
-                                        class="aiz-side-nav-link {{ areActiveRoutes(['flash_deals.index', 'flash_deals.create', 'flash_deals.edit']) }}">
-                                        <span class="aiz-side-nav-text">{{ translate('Flash deals') }}</span>
-                                    </a>
-                                </li>
-                            @endif
+                           
                             @if (Auth::user()->user_type == 'admin' || (Auth::user()->user_type == 'staff' && in_array('7', json_decode(Auth::user()->staff->role->permissions))))
                                 {{-- <li class="aiz-side-nav-item">
                                     <a href="{{ route('newsletters.index') }}" class="aiz-side-nav-link">
@@ -959,12 +952,7 @@
                                     <span class="aiz-side-nav-text">{{translate('Currency')}}</span>
                                 </a>
                             </li> --}}
-                            <li class="aiz-side-nav-item">
-                                <a href="{{ route('tax.index') }}"
-                                    class="aiz-side-nav-link {{ areActiveRoutes(['tax.index', 'tax.create', 'tax.store', 'tax.show', 'tax.edit']) }}">
-                                    <span class="aiz-side-nav-text">{{ translate('Vat & TAX') }}</span>
-                                </a>
-                            </li>
+                           
                             {{-- <li class="aiz-side-nav-item">
                                 <a href="{{route('pick_up_points.index')}}" class="aiz-side-nav-link {{ areActiveRoutes(['pick_up_points.index','pick_up_points.create','pick_up_points.edit'])}}">
                                     <span class="aiz-side-nav-text">{{translate('Pickup point')}}</span>
@@ -1131,14 +1119,7 @@
                 @endif --}}
 
                 <!-- Addon Manager -->
-                {{-- @if (Auth::user()->user_type == 'admin' || (Auth::user()->user_type == 'staff' && in_array('21', json_decode(Auth::user()->staff->role->permissions))))
-                    <li class="aiz-side-nav-item">
-                        <a href="{{route('addons.index')}}" class="aiz-side-nav-link {{ areActiveRoutes(['addons.index', 'addons.create'])}}">
-                            <i class="las la-wrench aiz-side-nav-icon"></i>
-                            <span class="aiz-side-nav-text">{{translate('Addon Manager')}}</span>
-                        </a>
-                    </li>
-                @endif --}}
+               
             </ul><!-- .aiz-side-nav -->
         </div><!-- .aiz-side-nav-wrap -->
     </div><!-- .aiz-sidebar -->

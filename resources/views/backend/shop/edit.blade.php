@@ -103,6 +103,8 @@
                     <input type="hidden" name="long" class="form-control" id="us3-lon" value="{{ $shops[0]->delivery_pickup_longitude}}" />
                     <input type="hidden" name="user_id" class="form-control" id="user_id" value="{{ $shops[0]->user_id}}" />
 
+                    <input type="number" name="long" class="form-control" id="us3-radius" />
+
                     <div class="form-group mb-0 text-right">
                         <button type="submit" class="btn btn-primary">{{ translate('Save') }}</button>
                     </div>

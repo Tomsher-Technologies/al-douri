@@ -144,7 +144,7 @@ class OrderController extends Controller
             ->get();
         $shops = Shop::select("*")->orderBy('name','ASC')->get();
         $user = auth()->user();
-        $shop_id = $user->shop->shop_id;
+        $shop_id = $user->shop->shop_id ?? '';
         return view('backend.sales.all_orders.show', compact('order', 'delivery_boys','shops','shop_id'));
     }
 
