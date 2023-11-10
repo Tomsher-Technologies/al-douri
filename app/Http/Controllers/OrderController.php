@@ -13,7 +13,9 @@ use App\Models\Product;
 use App\Models\ProductStock;
 use App\Models\CommissionHistory;
 use App\Models\Color;
+use App\Models\Shop;
 use App\Models\OrderDetail;
+use App\Models\OrderTransfers;
 use App\Models\CouponUsage;
 use App\Models\Coupon;
 use App\OtpConfiguration;
@@ -43,10 +45,13 @@ class OrderController extends Controller
         $delivery_status = null;
         $sort_search = null;
         $orders = DB::table('orders')
-            ->orderBy('id', 'desc')
+            ->orderBy('id', 'desc');
+            if (Auth::user()->user_type == 'shop'){
+                $orders->where('seller_id', Auth::user()->id);
+            }
             //->join('order_details', 'orders.id', '=', 'order_details.order_id')
-            ->where('seller_id', Auth::user()->id)
-            ->select('orders.id')
+            
+            $orders->select('orders.id')
             ->distinct();
 
         if ($request->payment_status != null) {
@@ -82,7 +87,14 @@ class OrderController extends Controller
         $sort_search = null;
         $delivery_status = null;
 
+        $user = auth()->user();
+        
+
         $orders = Order::orderBy('id', 'desc');
+        if (Auth::user()->user_type == 'shop'){
+            $shop_id = $user->shop->shop_id;
+            $orders->where('seller_id', $shop_id);
+        }
         if ($request->has('search')) {
             $sort_search = $request->search;
             $orders = $orders->where('code', 'like', '%' . $sort_search . '%');
@@ -98,6 +110,31 @@ class OrderController extends Controller
         return view('backend.sales.all_orders.index', compact('orders', 'sort_search', 'delivery_status', 'date'));
     }
 
+    public function transferred_orders(Request $request)
+    {
+        $date = $request->date;
+        $status = null;
+
+        $user = auth()->user();
+
+        $orders = OrderTransfers::orderBy('id', 'desc');
+        if (Auth::user()->user_type == 'shop'){
+            $shop_id = $user->shop->shop_id;
+            $orders->where('shop_from', $shop_id);
+        }
+        
+        if ($request->status != null) {
+            $orders = $orders->where('status', $request->status);
+            $status = $request->status;
+        }
+        if ($date != null) {
+            $orders = $orders->where('created_at', '>=', date('Y-m-d', strtotime(explode(" to ", $date)[0])))->where('created_at', '<=', date('Y-m-d', strtotime(explode(" to ", $date)[1])));
+        }
+        $orders = $orders->paginate(15);
+        
+        return view('backend.sales.transferred_orders.index', compact('orders', 'status', 'date'));
+    }
+
     public function all_orders_show($id)
     {
         $order = Order::findOrFail(decrypt($id));
@@ -105,8 +142,23 @@ class OrderController extends Controller
         $delivery_boys = User::where('city', $order_shipping_address->city)
             ->where('user_type', 'delivery_boy')
             ->get();
+        $shops = Shop::select("*")->orderBy('name','ASC')->get();
+        $user = auth()->user();
+        $shop_id = $user->shop->shop_id ?? '';
+        return view('backend.sales.all_orders.show', compact('order', 'delivery_boys','shops','shop_id'));
+    }
 
-        return view('backend.sales.all_orders.show', compact('order', 'delivery_boys'));
+    public function transferProduct(Request $request){
+        $transfer = new OrderTransfers();
+        $transfer->order_id = $request->order_id;
+        $transfer->order_detail_id = $request->order_detail_id;
+        $transfer->product_id = $request->product_id;
+        $transfer->shop_from = $request->shop_from_id;
+        $transfer->shop_to = $request->store_id;
+        $transfer->quantity = $request->quantity;
+        $transfer->save();
+        flash(translate('Product has been transferred successfully!'))->success();
+        return back();
     }
 
     // Inhouse Orders

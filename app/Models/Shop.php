@@ -9,9 +9,11 @@ class Shop extends Model
 
   protected $fillable = [
     'name',
+    'name_ar',
     'phone',
     'email',
     'address',
+    'address_ar',
     'delivery_pickup_latitude',
     'delivery_pickup_longitude',
     'status',
@@ -23,4 +25,10 @@ class Shop extends Model
   {
     return $this->belongsToMany(User::class);
   }
+
+  public function order_transfer()
+  {
+      return $this->hasMany(OrderTransfers::class);
+  }
+
 }

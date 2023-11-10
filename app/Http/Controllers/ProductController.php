@@ -399,9 +399,9 @@ class ProductController extends Controller
         $product_translation->name = $request->name;
         $product_translation->unit = $request->unit;
         $product_translation->description = $request->description;
-        $product_translation->meta_title = $product->meta_title;
-        $product_translation->meta_description = $product->meta_description;
-        $product_translation->meta_keywords = $product->meta_keywords;
+        // $product_translation->meta_title = $product->meta_title;
+        // $product_translation->meta_description = $product->meta_description;
+        // $product_translation->meta_keywords = $product->meta_keywords;
         $product_translation->save();
 
 

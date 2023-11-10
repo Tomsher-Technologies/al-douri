@@ -105,8 +105,8 @@
                                 height="100"></a>
                     @endif
                 </div>
-                <div class="col-md-4 ml-auto">
-                    <table>
+                <div class="col-md-3 ml-auto">
+                    <table class="w-100">
                         <tbody>
                             <tr>
                                 <td class="text-main text-bold">{{ translate('Order #') }}</td>
@@ -155,16 +155,15 @@
                                 <th width="10%">{{ translate('Photo') }}</th>
                                 <th class="text-uppercase">{{ translate('Description') }}</th>
                                 <th data-breakpoints="lg" class="text-uppercase">{{ translate('Delivery Type') }}</th>
-                                <th data-breakpoints="lg" class="min-col text-center text-uppercase">{{ translate('Qty') }}
-                                </th>
-                                <th data-breakpoints="lg" class="min-col text-center text-uppercase">
-                                    {{ translate('Price') }}</th>
-                                <th data-breakpoints="lg" class="min-col text-right text-uppercase">
-                                    {{ translate('Total') }}</th>
+                                <th data-breakpoints="lg" class="min-col text-center text-uppercase">{{ translate('Qty') }} </th>
+                                <th data-breakpoints="lg" class="min-col text-center text-uppercase"> {{ translate('Price') }}</th>
+                                <th data-breakpoints="lg" class="min-col text-center text-uppercase"> {{ translate('Total') }}</th>
+                                <th data-breakpoints="lg" class="min-col text-center text-uppercase"> {{ translate('Trasfer') }}</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($order->orderDetails as $key => $orderDetail)
+                           
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>
@@ -209,9 +208,27 @@
                                         @endif
                                     </td>
                                     <td class="text-center">{{ $orderDetail->quantity }}</td>
-                                    <td class="text-center">{{ single_price($orderDetail->price / $orderDetail->quantity) }}
+                                    <td class="text-center">
+                                        @if($orderDetail->original_price != '')
+                                            <span class="text-muted text-decoration-line-through">
+                                                {{ single_price($orderDetail->original_price) }}
+                                            </span>
+                                        @endif
+                                        <br>
+                                        {{ single_price($orderDetail->price / $orderDetail->quantity) }}
                                     </td>
                                     <td class="text-center">{{ single_price($orderDetail->price) }}</td>
+                                    <td class="text-center">
+                                        @if($orderDetail->order_transfer()->exists())
+                                            @if($orderDetail->order_transfer->status == 0)
+                                                <span class="badge bg-soft-danger w-50 h-100 fs-13"> Transferred </span>
+                                            @elseif($orderDetail->order_transfer->status == 1)
+                                                <span class="badge bg-soft-success w-50 h-100 fs-13"> Received </span>
+                                            @endif
+                                        @else
+                                            <a href="#" class="btn btn-info" onclick="transferProduct({{$orderDetail}})"> Transfer </a>
+                                        @endif
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -269,6 +286,56 @@
                 </div>
             </div>
 
+
+            <div class="modal fade" id="show_transfer_popup" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-md modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header text-center">
+                            <h4 class="" id="heading-data">{{ translate('Transfer Product') }}</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" style="overflow: auto;">
+                            <div class="row">
+                                <div class="col-12">
+                                    <form id="transferForm" action="{{ route('transfer-product') }}" name="transferForm" method="POST">
+                                        @csrf
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1">{{ translate('Select Shop') }}<span class="text-danger">*</span></label>
+                                                    <select class="form-control select2" name="store_id" id="store_id" required>
+                                                        <option value="">{{ translate('Select Shop') }}</option>
+                                                        @foreach ($shops as $shop)
+                                                        <option value="{{ $shop->id }}">{{ $shop->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    <input type="hidden" name="order_id" id="order_id" value="">
+                                                    <input type="hidden" name="shop_from_id" id="shop_from_id" value="{{$shop_id}}">
+                                                    <input type="hidden" name="product_id" id="product_id" value="">
+                                                    <input type="hidden" name="quantity" id="quantity" value="">
+                                                    <input type="hidden" name="order_detail_id" id="order_detail_id" value="">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <div class="form-group text-center">
+                                                    <button type="submit" class="btn btn-sm btn-primary">{{translate('Transfer')}}</button>
+                                                </div>
+                                            </div>
+
+                                        </div>              
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+
         </div>
     </div>
 @endsection
@@ -322,5 +389,13 @@
                 AIZ.plugins.notify('success', '{{ translate('Order tracking code has been updated') }}');
             });
         });
+        function transferProduct(data){
+            console.log(data);
+            $('#order_id').val(data.order_id);
+            $('#product_id').val(data.product_id);
+            $('#quantity').val(data.quantity);
+            $('#order_detail_id').val(data.id);
+            $('#show_transfer_popup').modal('show');
+        }
     </script>
 @endsection

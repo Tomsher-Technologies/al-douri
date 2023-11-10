@@ -6,7 +6,7 @@
     <form class="" action="" id="sort_orders" method="GET">
         <div class="card-header row gutters-5">
             <div class="col">
-                <h5 class="mb-md-0 h6">{{ translate('All Orders') }}</h5>
+                <h5 class="mb-md-0 h6">{{ translate('Transfer Orders') }}</h5>
             </div>
 
             <div class="dropdown mb-2 mb-md-0">
@@ -28,20 +28,16 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">
-                                {{translate('Choose an order status')}}
+                                {{translate('Choose a transfer status')}}
                             </h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            <select class="form-control aiz-selectpicker" onchange="change_status()" data-minimum-results-for-search="Infinity" id="update_delivery_status">
-                                <option value="pending">{{translate('Pending')}}</option>
-                                <option value="confirmed">{{translate('Confirmed')}}</option>
-                                <option value="picked_up">{{translate('Picked Up')}}</option>
-                                <option value="on_the_way">{{translate('On The Way')}}</option>
-                                <option value="delivered">{{translate('Delivered')}}</option>
-                                <option value="cancelled">{{translate('Cancel')}}</option>
+                            <select class="form-control aiz-selectpicker" onchange="change_status()" data-minimum-results-for-search="Infinity" id="update_transfer_status">
+                                <option value="pending">{{translate('Transferred')}}</option>
+                                <option value="confirmed">{{translate('Received')}}</option>
                             </select>
                         </div>
                         <div class="modal-footer">
@@ -53,14 +49,10 @@
             </div>
 
             <div class="col-lg-2 ml-auto">
-                <select class="form-control aiz-selectpicker" name="delivery_status" id="delivery_status">
-                    <option value="">{{translate('Filter by Delivery Status')}}</option>
-                    <option value="pending" @if ($delivery_status == 'pending') selected @endif>{{translate('Pending')}}</option>
-                    <option value="confirmed" @if ($delivery_status == 'confirmed') selected @endif>{{translate('Confirmed')}}</option>
-                    <option value="picked_up" @if ($delivery_status == 'picked_up') selected @endif>{{translate('Picked Up')}}</option>
-                    <option value="on_the_way" @if ($delivery_status == 'on_the_way') selected @endif>{{translate('On The Way')}}</option>
-                    <option value="delivered" @if ($delivery_status == 'delivered') selected @endif>{{translate('Delivered')}}</option>
-                    <option value="cancelled" @if ($delivery_status == 'cancelled') selected @endif>{{translate('Cancel')}}</option>
+                <select class="form-control aiz-selectpicker" name="transfer_status" id="transfer_status">
+                    <option value="">{{translate('Filter by Transfer Status')}}</option>
+                    <option value="0" @if ($status == '0') selected @endif>{{translate('Transferred')}}</option>
+                    <option value="1" @if ($status == '1') selected @endif>{{translate('Received')}}</option>
                 </select>
             </div>
             <div class="col-lg-2">
@@ -68,11 +60,11 @@
                     <input type="text" class="aiz-date-range form-control" value="{{ $date }}" name="date" placeholder="{{ translate('Filter by date') }}" data-format="DD-MM-Y" data-separator=" to " data-advanced-range="true" autocomplete="off">
                 </div>
             </div>
-            <div class="col-lg-2">
+            <!-- <div class="col-lg-2">
                 <div class="form-group mb-0">
                     <input type="text" class="form-control" id="search" name="search"@isset($sort_search) value="{{ $sort_search }}" @endisset placeholder="{{ translate('Type Order code & hit Enter') }}">
                 </div>
-            </div>
+            </div> -->
             <div class="col-auto">
                 <div class="form-group mb-0">
                     <button type="submit" class="btn btn-primary">{{ translate('Filter') }}</button>
@@ -96,14 +88,11 @@
                             </div>
                         </th>
                         <th >{{ translate('Order Code') }}</th>
+                        <th  class="text-center" data-breakpoints="md">{{ translate('Shop') }}</th>
+                        <th  class="text-center" data-breakpoints="md">{{ translate('Product') }}</th>
                         <th  class="text-center" data-breakpoints="md">{{ translate('Num. of Products') }}</th>
-                        <th  class="text-center" data-breakpoints="md">{{ translate('Customer') }}</th>
-                        <th  class="text-center" data-breakpoints="md">{{ translate('Amount') }}</th>
-                        <th  class="text-center" data-breakpoints="md">{{ translate('Delivery Status') }}</th>
-                        <th  class="text-center" data-breakpoints="md">{{ translate('Payment Status') }}</th>
-                        @if (addon_is_activated('refund_request'))
-                        <th  class="text-center">{{ translate('Refund') }}</th>
-                        @endif
+                        <th  class="text-center" data-breakpoints="md">{{ translate('Transfer Status') }}</th>
+                        <th  class="text-center" data-breakpoints="md">{{ translate('Date') }}</th>
                         <th class="text-center" width="15%">{{translate('actions')}}</th>
                     </tr>
                 </thead>
@@ -124,46 +113,28 @@
                             </div>
                         </td>
                         <td >
-                            {{ $order->code }}
+                            {{ $order->order->code }}
                         </td>
                         <td class="text-center">
-                            {{ count($order->orderDetails) }}
+                           {{ $order->shopTo->name }}
                         </td>
                         <td class="text-center">
-                            @if ($order->user != null)
-                            {{ $order->user->name }}
+                            {{ $order->product->name }}
+                        </td>
+                        <td class="text-center">
+                            {{ $order->quantity }}
+                        </td>
+                        <td class="text-center">
+                            @if ($order->status == 0)
+                            <span class="badge badge-inline badge-success">{{translate('Transferred')}}</span>
                             @else
-                            Guest ({{ $order->guest_id }})
+                            <span class="badge badge-inline badge-danger">{{translate('Received')}}</span>
                             @endif
                         </td>
                         <td class="text-center">
-                            {{ single_price($order->grand_total) }}
+                            {{ $order->created_at }}
                         </td>
-                        <td class="text-center">
-                            @php
-                                $status = ucfirst(str_replace('_', ' ', $order->delivery_status));
-                                if($order->delivery_status == 'cancelled') {
-                                    $status = '<span class="badge badge-inline badge-danger">'.translate('Cancel').'</span>';
-                                }
-                            @endphp
-                            {!! $status !!}
-                        </td>
-                        <td class="text-center">
-                            @if ($order->payment_status == 'paid')
-                            <span class="badge badge-inline badge-success">{{translate('Paid')}}</span>
-                            @else
-                            <span class="badge badge-inline badge-danger">{{translate('Unpaid')}}</span>
-                            @endif
-                        </td>
-                        @if (addon_is_activated('refund_request'))
-                        <td class="text-center">
-                            @if (count($order->refund_requests) > 0)
-                                {{ count($order->refund_requests) }} {{ translate('Refund') }}
-                            @else
-                                {{ translate('No Refund') }}
-                            @endif
-                        </td>
-                        @endif
+                        
                         <td class="text-center">
                             <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('all_orders.show', encrypt($order->id))}}" title="{{ translate('View') }}">
                                 <i class="las la-eye"></i>
