@@ -20,6 +20,7 @@ use App\Models\Product;
 use App\Models\Shop;
 use App\Utility\SendSMSUtility;
 use App\Utility\NotificationUtility;
+use Carbon\Carbon;
 
 //sensSMS function for OTP
 if (!function_exists('sendSMS')) {
@@ -865,3 +866,49 @@ if (!function_exists('addon_is_activated')) {
         return $activation == null ? false : true;
     }
 }
+
+
+    function generateOTP($user){
+        $data['otp'] = rand(1000,9999);
+        $data['otp_expiry'] = Carbon::now()->addMinutes(10);
+        
+        $user->otp = $data['otp'];
+        $user->otp_expiry = $data['otp_expiry'];
+        $user->save(); 
+
+        return $data;
+    }
+
+    function sendOTP($data){
+        $messages = urlencode($data['message']);
+        $sender = urlencode("TOMSHER");
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, "http://tomsher.me/sms/smsapi?api_key=R60001345fd4c0b80cb815.29446877&type=text&contacts=971" . $data['phone'] . "&senderid=$sender&msg=$messages");
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        $result = curl_exec($curl);
+        curl_close($curl);
+        return $result;
+    }
+
+    function verifyUserOTP($user, $otp){
+        $dbOtp = $user->otp;
+        $otp_expiry = $user->otp_expiry;
+
+        if($dbOtp === $otp && strtotime($otp_expiry) > time()) {
+            $user->is_phone_verified = 1;
+            $user->save();
+            return true; // Verification successful
+        }else{
+            return false;
+        }
+    }
+
+    function generateOTPMessage($userName, $otp){
+        // $data['message'] = "Hello ".$user->name.",
+        // Your One-Time Password (OTP) is: ".$otp.".
+        // This OTP is valid for 10 minutes. For security reasons, do not share it with anyone.
+        // Thank you for choosing ".env('APP_NAME').".";
+
+        $message = "Hi ".$userName.", Greetings from Farook! Your OTP: ".$otp." Treat this as confidential. Sharing this with anyone gives them full access to your Farook Account.";
+        return $message;
+    }
