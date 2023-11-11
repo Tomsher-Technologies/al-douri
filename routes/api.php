@@ -27,10 +27,14 @@ Route::group(['middleware' => 'api','prefix' => 'auth'], function ($router) {
         Route::get('user-profile', [ApiAuthController::class, 'user']);
         Route::post('update-profile', [ApiAuthController::class, 'updateProfile'])->name('update-profile');
         Route::post('change-password', [ApiAuthController::class, 'changePassword'])->name('change-password');
-        Route::post('add-address', [ApiAuthController::class, 'addAddress'])->name('add-address');
-        Route::post('update-address', [ApiAuthController::class, 'updateAddress'])->name('update-address');
-        Route::post('set-default-address', [ApiAuthController::class, 'setDefaultAddress'])->name('set-default-address');
-        Route::post('delete-address', [ApiAuthController::class, 'deleteAddress'])->name('delete-address');
+        // Route::post('add-address', [ApiAuthController::class, 'addAddress'])->name('add-address');
+        // Route::post('update-address', [ApiAuthController::class, 'updateAddress'])->name('update-address');
+        // Route::post('set-default-address', [ApiAuthController::class, 'setDefaultAddress'])->name('set-default-address');
+        // Route::post('delete-address', [ApiAuthController::class, 'deleteAddress'])->name('delete-address');
+        Route::post('/update-profile-image', [ApiAuthController::class, 'updateProfileImage'])->name('update-profile-image');
+        Route::get('home-categories', [ApiAuthController::class, 'categories'])->name('home-categories');
+        Route::get('brands', [ApiAuthController::class, 'getAllBrands'])->name('brands');
+        Route::get('home-products', [ApiAuthController::class, 'homeProducts'])->name('home-products');
     });
 
 });
