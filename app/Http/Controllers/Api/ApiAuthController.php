@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\Auth;
 use App\Notifications\EmailVerificationNotification;
 use App\Models\Customer;
 use App\Models\Address;
+use App\Models\Brand;
+use App\Models\BrandTranslation;
+use App\Models\Category;
+use App\Models\Product;
 use Carbon\Carbon;
 use App\Models\User;
 use Validator;
@@ -283,6 +287,41 @@ class ApiAuthController extends Controller
         return response()->json(['status' => true,'message' => 'User details updated successfully', 'data' => []],200);
     }
 
+      // Update user profile image
+      public function updateProfileImage(Request $request){
+        $userId = $request->user()->id;
+
+        $userdata = User::find($userId);
+     
+        if($userdata){
+            $presentImage = $userdata->avatar;
+
+            $profileImage = '';
+            if ($request->hasFile('profile_image')) {
+                $uploadedFile = $request->file('profile_image');
+                $filename =    strtolower(Str::random(2)).time().'.'. $uploadedFile->getClientOriginalName();
+                $name = Storage::disk('public')->putFileAs(
+                    'users/'.$userId,
+                    $uploadedFile,
+                    $filename
+                );
+                $profileImage = Storage::url($name);
+                
+                if($presentImage != '' && File::exists(public_path($presentImage))){
+                    unlink(public_path($presentImage));
+                }
+                $userdata->avatar = $profileImage;
+                $userdata->save();
+            
+                return response()->json(['status' => true,'message' => 'User image updated successfully', 'data' => ['profile_image' => asset($profileImage)]]);
+            }else{
+                return response()->json(['status' => false,'message' => 'Failed to update user image', 'data' => []]);
+            }
+        }else{
+            return response()->json(['status' => false,'message' => 'User not found', 'data' => []]);
+        } 
+    }
+
     public function changePassword(Request $request)
     {
         $userId = $request->user()->id;
@@ -390,5 +429,45 @@ class ApiAuthController extends Controller
         }else{
             return response()->json(['status' => false, 'message' => 'User not found', 'data' => []], 200);
         }
+    }
+
+    public function categories(Request $request){
+        $lang = $request->lang;
+        $limit = $request->limit;
+        $offset = $request->offset;
+        $parent_id = $request->parent_id;
+
+        $categories = Category::where('parent_id', $parent_id)
+                                ->orderBy('name','ASC')->skip($offset)->take($limit)->get();
+        if($categories){
+            $category = [];
+            foreach($categories as $key=>$categ){
+                $category[$key]['name'] = $categ->getTranslation('name', $lang);
+                $category[$key]['logo'] =  uploaded_asset($categ->icon);
+            }
+            return response()->json(['status' => true,'message' => 'Data fetched successfully', 'data' => $category, 'offset' => $offset + $limit],200);
+        }else{
+            return response()->json(['status' => false, 'message' => 'No data found', 'data' => []], 200);
+        }
+    }
+
+    public function getAllBrands(){
+        $brands = Brand::orderBy('id','asc')->get();
+        if($brands){
+            $logos = [];
+            foreach ($brands as $brand) {
+                $logos[] =  uploaded_asset($brand->logo);
+            }
+            return response()->json(['status' => true,'message' => 'Data fetched successfully', 'data' => $logos],200);
+        }else{
+            return response()->json(['status' => false, 'message' => 'No brands found', 'data' => []], 200);
+        }
+    }
+
+    public function homeProducts(){
+        $data['trending'] = Product::where('published', 1)->orderBy('num_of_sale', 'desc')->limit(10)->get();
+        $data['deal_week'] = Product::where('todays_deal', 1)->physical();
+        return response()->json(['status' => true,'message' => 'Data fetched successfully', 'data' => $data],200);
+       
     }
 }
