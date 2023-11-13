@@ -35,6 +35,8 @@ Route::group(['middleware' => 'api','prefix' => 'auth'], function ($router) {
         Route::get('home-categories', [ApiAuthController::class, 'categories'])->name('home-categories');
         Route::get('brands', [ApiAuthController::class, 'getAllBrands'])->name('brands');
         Route::get('home-products', [ApiAuthController::class, 'homeProducts'])->name('home-products');
+
+        Route::get('week-deals', [ApiAuthController::class, 'dealOfWeekListing'])->name('week-deals');
     });
 
 });

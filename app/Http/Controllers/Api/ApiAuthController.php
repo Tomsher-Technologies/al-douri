@@ -464,10 +464,52 @@ class ApiAuthController extends Controller
         }
     }
 
-    public function homeProducts(){
-        $data['trending'] = Product::where('published', 1)->orderBy('num_of_sale', 'desc')->limit(10)->get();
-        $data['deal_week'] = Product::where('todays_deal', 1)->physical();
-        return response()->json(['status' => true,'message' => 'Data fetched successfully', 'data' => $data],200);
+    public function homeProducts(Request $request){
+        $lang = $request->lang;
+        $limit = $request->limit;
+
+        $trending = Product::where('published', 1)->orderBy('num_of_sale', 'desc')->limit($limit)->get();
+
+        $data['deal_week'] = $data['trending'] = [];
+        if(isset($trending[0])){
+            foreach($trending as $key=>$trend){
+                $data['trending'][$key]['name'] = $trend->getTranslation('name', $lang);
+                $data['trending'][$key]['unit_price'] = $trend->unit_price;
+                $data['trending'][$key]['unit'] = $trend->unit;
+                $data['trending'][$key]['image'] =  uploaded_asset($trend->thumbnail_img);
+            }
+        }
        
+        $deal_week = Product::where('todays_deal', 1)->orderBy('updated_at', 'desc')->limit($limit)->get();
+
+        if(isset($deal_week[0])){
+            foreach($deal_week as $key=>$deal){
+                $data['deal_week'][$key]['name'] = $deal->getTranslation('name', $lang);
+                $data['deal_week'][$key]['unit_price'] = $deal->unit_price;
+                $data['deal_week'][$key]['unit'] = $deal->unit;
+                $data['deal_week'][$key]['image'] =  uploaded_asset($deal->thumbnail_img);
+            }
+        }
+        return response()->json(['status' => true,'message' => 'Data fetched successfully', 'data' => $data],200);
+    }
+
+    public function dealOfWeekListing(Request $request){
+        $lang = $request->lang;
+        $limit = $request->limit;
+        $offset = $request->offset;
+
+        $deal_week = Product::where('todays_deal', 1)->orderBy('updated_at', 'desc')->skip($offset)->take($limit)->get();
+
+        if(isset($deal_week[0])){
+            foreach($deal_week as $key=>$deal){
+                $data['deal_week'][$key]['name'] = $deal->getTranslation('name', $lang);
+                $data['deal_week'][$key]['unit_price'] = $deal->unit_price;
+                $data['deal_week'][$key]['unit'] = $deal->unit;
+                $data['deal_week'][$key]['image'] =  uploaded_asset($deal->thumbnail_img);
+            }
+            return response()->json(['status' => true,'message' => 'Data fetched successfully', 'data' => $data['deal_week'], 'offset' => $offset + $limit],200);
+        }else{
+            return response()->json(['status' => false, 'message' => 'No data found', 'data' => []], 200);
+        }
     }
 }
