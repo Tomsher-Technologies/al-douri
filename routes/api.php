@@ -4,15 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ApiAuthController;
 
-
-Route::group(['prefix' => 'auth'], function ($router) {
-    Route::get('/countries', [ApiController::class, 'getCountries'])->name('countries');
-    Route::get('/state/{country_id?}', [ApiController::class, 'getCountryStates'])->name('state');
-
-    Route::post('/forgot-password', [ApiController::class, 'forgotPassword'])->name('forgot-password');
-});
-
-Route::group(['middleware' => 'api','prefix' => 'auth'], function ($router) {
+Route::group(['middleware' => 'api','prefix' => 'auth'], function () {
     
     Route::post('/login', [ApiAuthController::class, 'login'])->name('login');
     Route::post('/otp-login', [ApiAuthController::class, 'loginWithOTP'])->name('otp-login');
@@ -20,8 +12,15 @@ Route::group(['middleware' => 'api','prefix' => 'auth'], function ($router) {
 
     Route::post('/verify-otp', [ApiAuthController::class, 'verifyOTP'])->name('verify-otp');
     Route::post('/resend-otp', [ApiAuthController::class, 'resendOTP'])->name('resend-otp');
+
+    Route::get('home-categories', [ApiAuthController::class, 'categories'])->name('home-categories');
+    Route::get('brands', [ApiAuthController::class, 'getAllBrands'])->name('brands');
+    Route::get('home-products', [ApiAuthController::class, 'homeProducts'])->name('home-products');
+
+    Route::get('deals-trend', [ApiAuthController::class, 'deal_trend_Listing'])->name('deals-trend');
+    Route::get('menu-categories', [ApiAuthController::class, 'menuCategories'])->name('menu-categories');
+    Route::get('category-products', [ApiAuthController::class, 'categoryProducts'])->name('category-products');
    
-    Route::get('/user-profile', [ApiAuthController::class, 'userProfile'])->name('user-profile'); 
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('logout', [ApiAuthController::class, 'logout']);
         Route::get('user-profile', [ApiAuthController::class, 'user']);
@@ -32,11 +31,8 @@ Route::group(['middleware' => 'api','prefix' => 'auth'], function ($router) {
         // Route::post('set-default-address', [ApiAuthController::class, 'setDefaultAddress'])->name('set-default-address');
         // Route::post('delete-address', [ApiAuthController::class, 'deleteAddress'])->name('delete-address');
         Route::post('/update-profile-image', [ApiAuthController::class, 'updateProfileImage'])->name('update-profile-image');
-        Route::get('home-categories', [ApiAuthController::class, 'categories'])->name('home-categories');
-        Route::get('brands', [ApiAuthController::class, 'getAllBrands'])->name('brands');
-        Route::get('home-products', [ApiAuthController::class, 'homeProducts'])->name('home-products');
-
-        Route::get('week-deals', [ApiAuthController::class, 'dealOfWeekListing'])->name('week-deals');
+        
+        
     });
 
 });

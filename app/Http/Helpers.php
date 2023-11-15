@@ -912,3 +912,16 @@ if (!function_exists('addon_is_activated')) {
         $message = "Hi ".$userName.", Greetings from Farook! Your OTP: ".$otp." Treat this as confidential. Sharing this with anyone gives them full access to your Farook Account.";
         return $message;
     }
+
+
+    function getSubCategory($data, $lang){
+        $categories = [];
+        if(!empty($data)){
+            foreach($data as $key=>$dt){
+                $categories[$key]['id'] = $dt->id;
+                $categories[$key]['name'] = $dt->getTranslation('name', $lang);
+                $categories[$key]['sub_category'] = getSubCategory($dt->childrenRecursive, $lang);
+            }
+        }
+        return $categories;
+    }

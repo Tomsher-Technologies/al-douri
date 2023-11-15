@@ -41,6 +41,16 @@ class Category extends Model
         return $this->hasMany(Category::class, 'parent_id')->with('categories');
     }
 
+    public function childs()
+    {
+        return $this->hasMany(Category::class, 'parent_id');
+    }
+
+    public function childrenRecursive()
+    {
+        return $this->childs()->with('childrenRecursive');
+    }
+
     public function parentCategory()
     {
         return $this->belongsTo(Category::class, 'parent_id');
@@ -49,5 +59,18 @@ class Category extends Model
     public function attributes()
     {
         return $this->belongsToMany(Attribute::class);
+    }
+
+    public function getAllChildren ()
+    {
+
+        $sections = collect([]);
+        if(!empty($this->childs)){
+            foreach ($this->childs as $section) {
+                $sections->push($section);
+                $sections = $sections->merge($section->getAllChildren());
+            }
+        }
+        return $sections;
     }
 }

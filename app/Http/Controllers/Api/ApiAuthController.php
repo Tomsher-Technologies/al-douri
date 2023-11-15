@@ -445,7 +445,9 @@ class ApiAuthController extends Controller
                 $category[$key]['name'] = $categ->getTranslation('name', $lang);
                 $category[$key]['logo'] =  uploaded_asset($categ->icon);
             }
-            return response()->json(['status' => true,'message' => 'Data fetched successfully', 'data' => $category, 'offset' => $offset + $limit],200);
+            $categories = $category;
+
+            return response()->json(['status' => true,'message' => 'Data fetched successfully', 'data' => $categories, 'offset' => $offset + $limit],200);
         }else{
             return response()->json(['status' => false, 'message' => 'No data found', 'data' => []], 200);
         }
@@ -473,6 +475,7 @@ class ApiAuthController extends Controller
         $data['deal_week'] = $data['trending'] = [];
         if(isset($trending[0])){
             foreach($trending as $key=>$trend){
+                $data['trending'][$key]['id'] = $trend->id;
                 $data['trending'][$key]['name'] = $trend->getTranslation('name', $lang);
                 $data['trending'][$key]['unit_price'] = $trend->unit_price;
                 $data['trending'][$key]['unit'] = $trend->unit;
@@ -484,32 +487,100 @@ class ApiAuthController extends Controller
 
         if(isset($deal_week[0])){
             foreach($deal_week as $key=>$deal){
+                $data['deal_week'][$key]['id'] = $deal->id;
                 $data['deal_week'][$key]['name'] = $deal->getTranslation('name', $lang);
                 $data['deal_week'][$key]['unit_price'] = $deal->unit_price;
                 $data['deal_week'][$key]['unit'] = $deal->unit;
                 $data['deal_week'][$key]['image'] =  uploaded_asset($deal->thumbnail_img);
             }
         }
+        $logos = [];
+        $brands = Brand::orderBy('id','asc')->get();
+        if($brands){
+            $logos = [];
+            foreach ($brands as $key1 => $brand) {
+                $logos[$key1]['id'] =  $brand->id;
+                $logos[$key1]['logo'] =  uploaded_asset($brand->logo);
+            }
+        }
+        $data['brands'] = $logos;
         return response()->json(['status' => true,'message' => 'Data fetched successfully', 'data' => $data],200);
     }
 
-    public function dealOfWeekListing(Request $request){
-        $lang = $request->lang;
-        $limit = $request->limit;
+    public function deal_trend_Listing(Request $request){
+        $lang   = $request->lang;
+        $limit  = $request->limit;
         $offset = $request->offset;
+        $type   = $request->type;
 
-        $deal_week = Product::where('todays_deal', 1)->orderBy('updated_at', 'desc')->skip($offset)->take($limit)->get();
+        $data = [];
+        if($type == 'deal'){
+            $details = Product::where('todays_deal', 1)->orderBy('updated_at', 'desc')->skip($offset)->take($limit)->get();
+        }elseif($type == 'trend'){
+            $details = Product::where('published', 1)->orderBy('num_of_sale', 'desc')->skip($offset)->take($limit)->get();
+        }
 
-        if(isset($deal_week[0])){
-            foreach($deal_week as $key=>$deal){
-                $data['deal_week'][$key]['name'] = $deal->getTranslation('name', $lang);
-                $data['deal_week'][$key]['unit_price'] = $deal->unit_price;
-                $data['deal_week'][$key]['unit'] = $deal->unit;
-                $data['deal_week'][$key]['image'] =  uploaded_asset($deal->thumbnail_img);
+        if(isset($details[0])){
+            foreach($details as $key=>$det){
+                $data[$key]['name']         = $det->getTranslation('name', $lang);
+                $data[$key]['unit_price']   = $det->unit_price;
+                $data[$key]['unit']         = $det->unit;
+                $data[$key]['image']        =  uploaded_asset($det->thumbnail_img);
             }
-            return response()->json(['status' => true,'message' => 'Data fetched successfully', 'data' => $data['deal_week'], 'offset' => $offset + $limit],200);
+            return response()->json(['status' => true,'message' => 'Data fetched successfully', 'data' => $data, 'offset' => $offset + $limit],200);
         }else{
             return response()->json(['status' => false, 'message' => 'No data found', 'data' => []], 200);
         }
     }
+
+    public function menuCategories(Request $request){
+        $lang = $request->lang;
+        $data = Category::with(['childrenRecursive'])->where('parent_id',0)->get();
+        
+        $categories = [];
+        if(isset($data[0])){
+            foreach($data as $key=>$dt){
+                $categories[$key]['id'] = $dt->id;
+                $categories[$key]['name'] = $dt->getTranslation('name', $lang);
+                $categories[$key]['sub_category'] = getSubCategory($dt->childrenRecursive,$lang);
+            }
+        }
+       
+        return response()->json(['status' => true,'message' => 'Data fetched successfully', 'data' => $categories],200);
+    }
+
+    public function categoryProducts(Request $request){
+        $category_id    = $request->category_id;
+        $lang           = $request->lang;
+        $limit          = $request->limit;
+        $offset         = $request->offset;
+        $sort           = $request->has('sort_by') ? $request->sort_by : '';
+
+        if($category_id == 0){
+            $subcategoryIds = [];
+        }else{
+            $subcategory = Category::where('id', $category_id)->first();
+            $subcategoryIds = $subcategory->getAllChildren()->pluck('id')->toArray();
+            array_push($subcategoryIds , $category_id );
+        }
+        $products = Product::whereIn('category_id', $subcategoryIds)->where('published', 1);
+        if($sort == 'HL'){
+            $products->orderBy('unit_price','DESC');
+        }elseif($sort == 'LH'){
+            $products->orderBy('unit_price','ASC');
+        }
+        $catProducts = $products->skip($offset)->take($limit)->get();
+
+        if(isset($catProducts[0])){
+            foreach($catProducts as $key=>$prod){
+                $data[$key]['id'] = $prod->id;
+                $data[$key]['name'] = $prod->getTranslation('name', $lang);
+                $data[$key]['unit_price'] = $prod->unit_price;
+                $data[$key]['unit'] = $prod->unit;
+                $data[$key]['image'] =  uploaded_asset($prod->thumbnail_img);
+            }
+        }
+        return response()->json(['status' => true,'message' => 'Data fetched successfully', 'data' => $data, 'offset' => ($offset + $limit) ],200);
+    }
+    
 }
