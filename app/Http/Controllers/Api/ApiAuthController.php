@@ -442,6 +442,7 @@ class ApiAuthController extends Controller
         if($categories){
             $category = [];
             foreach($categories as $key=>$categ){
+                $category[$key]['id'] = $categ->id;
                 $category[$key]['name'] = $categ->getTranslation('name', $lang);
                 $category[$key]['logo'] =  uploaded_asset($categ->icon);
             }
@@ -522,6 +523,7 @@ class ApiAuthController extends Controller
 
         if(isset($details[0])){
             foreach($details as $key=>$det){
+                $data[$key]['id'] = $det->id;
                 $data[$key]['name']         = $det->getTranslation('name', $lang);
                 $data[$key]['unit_price']   = $det->unit_price;
                 $data[$key]['unit']         = $det->unit;
