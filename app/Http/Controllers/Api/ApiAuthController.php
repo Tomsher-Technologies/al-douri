@@ -83,7 +83,8 @@ class ApiAuthController extends Controller
         return response()->json([
             'status' => true,
             'message' => translate('Registration Successful. OPT has been sent to your phone, please verify and log in to your account.'),
-            'data' => $user->id
+            'data' => $user->id,
+            'otp' => $otp['otp']
         ], 200);
     }
 
@@ -150,14 +151,13 @@ class ApiAuthController extends Controller
     }
 
     public function verifyOTP(Request $request){
-        $user_id = $request->user_id;
+        $userId = $request->user_id;
         $otp = $request->otp;
 
-        // || !verifyOTP($user,$otp)
-        if ($user_id == '' || $otp == '') {
+        if ($userId == '' || $otp == '') {
             return response()->json(['status'=>false,'message'=>'Invalid details.','data' => []],200);
         }else{
-            $user = User::find($user_id);
+            $user = User::find($userId);
             if($user){
                 $verify = verifyUserOTP($user, $otp);
                 if($verify){
@@ -172,15 +172,12 @@ class ApiAuthController extends Controller
     }
 
     public function resendOTP(Request $request){
-        $user_id = $request->user_id;
-
-        $user = User::find($user_id);
+        $userId = $request->user_id;
+        $user = User::find($userId);
         if ($user != null) {
             $otp = generateOTP($user);
-
             $data['message'] = generateOTPMessage($user->name, $otp['otp']); 
             $data['phone'] = $user->phone;
-
             $sendStatus = sendOTP($data);
             $sendStatus = true;
             return response()->json([
@@ -196,7 +193,6 @@ class ApiAuthController extends Controller
             return response()->json(['status' => false, 'message' => translate('User not found'), 'data' => []], 200);
         }
     }
-
 
     public function logout(Request $request)
     {
