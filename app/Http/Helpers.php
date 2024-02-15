@@ -129,7 +129,7 @@ if (!function_exists('verified_sellers_id')) {
     function verified_sellers_id()
     {
         return Cache::rememberForever('verified_sellers_id', function () {
-            return App\Models\Seller::where('verification_status', 1)->pluck('user_id')->toArray();
+            // return App\Models\Seller::where('verification_status', 1)->pluck('user_id')->toArray();
         });
     }
 }
@@ -229,15 +229,18 @@ if (!function_exists('home_price')) {
             }
         }
 
-        foreach ($product->taxes as $product_tax) {
-            if ($product_tax->tax_type == 'percent') {
-                $lowest_price += ($lowest_price * $product_tax->tax) / 100;
-                $highest_price += ($highest_price * $product_tax->tax) / 100;
-            } elseif ($product_tax->tax_type == 'amount') {
-                $lowest_price += $product_tax->tax;
-                $highest_price += $product_tax->tax;
+        if($product->taxes){
+            foreach ($product->taxes as $product_tax) {
+                if ($product_tax->tax_type == 'percent') {
+                    $lowest_price += ($lowest_price * $product_tax->tax) / 100;
+                    $highest_price += ($highest_price * $product_tax->tax) / 100;
+                } elseif ($product_tax->tax_type == 'amount') {
+                    $lowest_price += $product_tax->tax;
+                    $highest_price += $product_tax->tax;
+                }
             }
         }
+        
 
         if ($formatted) {
             if ($lowest_price == $highest_price) {
@@ -290,15 +293,18 @@ if (!function_exists('home_discounted_price')) {
             }
         }
 
-        foreach ($product->taxes as $product_tax) {
-            if ($product_tax->tax_type == 'percent') {
-                $lowest_price += ($lowest_price * $product_tax->tax) / 100;
-                $highest_price += ($highest_price * $product_tax->tax) / 100;
-            } elseif ($product_tax->tax_type == 'amount') {
-                $lowest_price += $product_tax->tax;
-                $highest_price += $product_tax->tax;
+        if($product->taxes){
+            foreach ($product->taxes as $product_tax) {
+                if ($product_tax->tax_type == 'percent') {
+                    $lowest_price += ($lowest_price * $product_tax->tax) / 100;
+                    $highest_price += ($highest_price * $product_tax->tax) / 100;
+                } elseif ($product_tax->tax_type == 'amount') {
+                    $lowest_price += $product_tax->tax;
+                    $highest_price += $product_tax->tax;
+                }
             }
         }
+        
 
         if ($formatted) {
             if ($lowest_price == $highest_price) {
@@ -337,13 +343,16 @@ if (!function_exists('home_base_price')) {
         $price = $product->unit_price;
         $tax = 0;
 
-        foreach ($product->taxes as $product_tax) {
-            if ($product_tax->tax_type == 'percent') {
-                $tax += ($price * $product_tax->tax) / 100;
-            } elseif ($product_tax->tax_type == 'amount') {
-                $tax += $product_tax->tax;
+        if($product->taxes){
+            foreach ($product->taxes as $product_tax) {
+                if ($product_tax->tax_type == 'percent') {
+                    $tax += ($price * $product_tax->tax) / 100;
+                } elseif ($product_tax->tax_type == 'amount') {
+                    $tax += $product_tax->tax;
+                }
             }
         }
+        
         $price += $tax;
         return $formatted ? format_price(convert_price($price)) : $price;
     }
@@ -377,13 +386,16 @@ if (!function_exists('home_discounted_base_price_by_stock_id')) {
             }
         }
 
-        foreach ($product->taxes as $product_tax) {
-            if ($product_tax->tax_type == 'percent') {
-                $tax += ($price * $product_tax->tax) / 100;
-            } elseif ($product_tax->tax_type == 'amount') {
-                $tax += $product_tax->tax;
+        if($product->taxes){
+            foreach ($product->taxes as $product_tax) {
+                if ($product_tax->tax_type == 'percent') {
+                    $tax += ($price * $product_tax->tax) / 100;
+                } elseif ($product_tax->tax_type == 'amount') {
+                    $tax += $product_tax->tax;
+                }
             }
         }
+        
         $price += $tax;
 
         return format_price(convert_price($price));
@@ -415,12 +427,13 @@ if (!function_exists('home_discounted_base_price')) {
                 $price -= $product->discount;
             }
         }
-
-        foreach ($product->taxes as $product_tax) {
-            if ($product_tax->tax_type == 'percent') {
-                $tax += ($price * $product_tax->tax) / 100;
-            } elseif ($product_tax->tax_type == 'amount') {
-                $tax += $product_tax->tax;
+        if($product->taxes){
+            foreach ($product->taxes as $product_tax) {
+                if ($product_tax->tax_type == 'percent') {
+                    $tax += ($price * $product_tax->tax) / 100;
+                } elseif ($product_tax->tax_type == 'amount') {
+                    $tax += $product_tax->tax;
+                }
             }
         }
         $price += $tax;
@@ -883,7 +896,7 @@ if (!function_exists('addon_is_activated')) {
         $messages = urlencode($data['message']);
         $sender = urlencode("TOMSHER");
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, "http://tomsher.me/sms/smsapi?api_key=R60001345fd4c0b80cb815.29446877&type=text&contacts=971" . $data['phone'] . "&senderid=$sender&msg=$messages");
+        curl_setopt($curl, CURLOPT_URL, "http://tomsher.me/sms/smsapi?api_key=R60001345fd4c0b80cb815.29446877&type=text&contacts=" . $data['phone'] . "&senderid=$sender&msg=$messages");
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         $result = curl_exec($curl);
         curl_close($curl);
