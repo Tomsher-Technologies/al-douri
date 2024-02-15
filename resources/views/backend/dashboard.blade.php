@@ -253,9 +253,9 @@
                 ],
                 datasets: [{
                     data: [
-                        {{ \App\Models\Seller::count() }},
-                        {{ \App\Models\Seller::where('verification_status', 1)->count() }},
-                        {{ \App\Models\Seller::where('verification_status', 0)->count() }}
+                        {{ 0 }},
+                        {{ 0 }},
+                        {{ 0 }}
                     ],
                     backgroundColor: [
                         "#fd3995",

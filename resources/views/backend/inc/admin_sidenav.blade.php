@@ -424,9 +424,7 @@
                         <ul class="aiz-side-nav-list level-2">
                             <li class="aiz-side-nav-item">
                                 @php
-                                    $sellers = \App\Models\Seller::where('verification_status', 0)
-                                        ->where('verification_info', '!=', null)
-                                        ->count();
+                                    $sellers = 0;
                                 @endphp
                                 <a href="{{ route('sellers.index') }}"
                                     class="aiz-side-nav-link {{ areActiveRoutes(['sellers.index', 'sellers.create', 'sellers.edit', 'sellers.payment_history', 'sellers.approved', 'sellers.profile_modal', 'sellers.show_verification_request']) }}">

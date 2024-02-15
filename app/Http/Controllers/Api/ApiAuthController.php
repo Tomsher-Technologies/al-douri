@@ -21,10 +21,10 @@ use File;
 use Storage;
 use DB;
 
-class ApiAuthController extends Controller
+class ApiAuthController extends Controller 
 {
   
-    public function signup(Request $request)
+    public function signup(Request $request) 
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|between:2,100',
@@ -61,32 +61,28 @@ class ApiAuthController extends Controller
             'verification_code' => rand(100000, 999999)
         ]);
         $user->save();
-
         $details = [
             'name' => $request->name,
             'subject' => 'Welcome to '.env('APP_NAME').'!',
-            'body' => " <p> We are thrilled to welcome you to ".env('APP_NAME').".</p><br>
+            'body' => " <p> We are thrilled to welcome you to ".env('APP_NAME').".</p><br> 
             <p>To start exploring, simply log in to your account using the credentials you provided during registration. If you have any questions or need assistance, please don't hesitate to reach out to our customer support team.</p><br>
-            <p>Thank you for choosing ".env('APP_NAME').". We're here to make your shopping experience extraordinary, and we can't wait to see what you discover.</p><br><p>Welcome aboard, and happy shopping!</p><br><br>"
+            <p>Thank you for choosing ".env('APP_NAME').". We're here to make your shopping experience extraordinary, and we can't wait to see what you discover.</p><br><p>Welcome aboard, and happy shopping!</p><br> "
         ];
        
         \Mail::to($request->email)->send(new \App\Mail\SendMail($details));
 
         $otp = generateOTP($user);
-
         $data['message'] = generateOTPMessage($user->name, $otp['otp']); 
-        $data['phone'] = $user->phone;
-       
+        $data['phone'] = $user->phone;   
         $sendStatus = sendOTP($data); 
-        $sendStatus = true;
-
-        $customer = new Customer;
-        $customer->user_id = $user->id;
-        $customer->save();
+        
+        $customer = new Customer; 
+        $customer->user_id = $user->id; 
+        $customer->save(); 
 
         return response()->json([
             'status' => true,
-            'message' => translate('Registration Successful. Please verify your Mobile number.'),
+            'message' => translate('Registration Successful. OPT has been sent to your phone, please verify and log in to your account.'),
             'data' => $user->id
         ], 200);
     }
