@@ -595,7 +595,7 @@ if (!function_exists('api_upload_asset')) {
         if (($asset = Upload::find($id)) != null) {
             return app('url')->asset('storage/' . $asset->file_name);
         }
-        return app('url')->asset('admin_assets/assets/img/placeholder.jpg');
+        return app('url')->asset('assets/img/placeholder.jpg');
     }
 }
 
