@@ -15,6 +15,185 @@ use App\Models\State;
 
 class AddressController extends Controller
 {
+
+    public function index(Request $request)
+    {
+        return new AddressCollection(Address::where('user_id', $request->user()->id)->get());
+    }
+
+    public function store(Request $request)
+    {
+        $validate = $request->validate([
+            'type' => 'required',
+            'name' => 'required',
+            'address' => 'required',
+            'phone' => 'required',
+            'latitude' => 'required',
+            'longitude' => 'required',
+        ], [
+            'type.required' => 'Please enter address type',
+            'name.required' => 'Please enter your name',
+            'address.required' => 'Please enter your address',
+            'latitude.required' => 'Please enter your latitude',
+            'longitude.required' => 'Please enter your longitude',
+            'phone.required' => 'Please enter your phone',
+        ]);
+
+        $user_id = (!empty(auth('sanctum')->user())) ? auth('sanctum')->user()->id : '';
+
+        if($user_id != ''){
+            $address = new Address;
+            $address->user_id = $user_id;
+            $address->type = $request->type ?? null;
+            $address->address = $request->address ?? null;
+            $address->name = $request->name ?? null;
+            $address->country_id = getCountryId($request->country);
+            $address->state_id = getStateId($request->state);
+            $address->country_name = $request->country ?? null;
+            $address->state_name = $request->state ?? null;
+            $address->city = $request->city ?? null;
+            // $address->postal_code = $request->postal_code;
+            $address->longitude = $request->longitude ?? null;
+            $address->latitude = $request->latitude ?? null;
+            $address->phone = $request->phone ?? null;
+            $address->save();
+    
+            return response()->json([
+                'status' => true,
+                'message' => 'Address has been added successfully'
+            ]);
+        }else{
+            return response()->json([
+                'status' => false,
+                'message' => 'User not found'
+            ]);
+        }
+    }
+
+    public function updateAddress(Request $request){
+        $validate = $request->validate([
+            'address_id' => 'required',
+            'type' => 'required',
+            'name' => 'required',
+            'address' => 'required',
+            'phone' => 'required',
+            'latitude' => 'required',
+            'longitude' => 'required',
+        ], [
+            'address_id.required' => 'Please enter address id',
+            'type.required' => 'Please enter address type',
+            'name.required' => 'Please enter your name',
+            'address.required' => 'Please enter your address',
+            'latitude.required' => 'Please enter your latitude',
+            'longitude.required' => 'Please enter your longitude',
+            'phone.required' => 'Please enter your phone',
+        ]);
+
+        $user_id = (!empty(auth('sanctum')->user())) ? auth('sanctum')->user()->id : '';
+
+        if($user_id != ''){
+            $address = Address::find($request->address_id);
+            if($address){
+                if ($address->user_id !== $user_id) {
+                    return response()->json([
+                        'result' => false,
+                        'message' => 'Unauthorized'
+                    ], 401);
+                }else{
+                    $address->type = $request->type ?? null;
+                    $address->address = $request->address ?? null;
+                    $address->name = $request->name ?? null;
+                    $address->country_id = getCountryId($request->country);
+                    $address->state_id = getStateId($request->state);
+                    $address->country_name = $request->country ?? null;
+                    $address->state_name = $request->state ?? null;
+                    $address->city = $request->city ?? null;
+                    $address->longitude = $request->longitude ?? null;
+                    $address->latitude = $request->latitude ?? null;
+                    $address->phone = $request->phone ?? null;
+                    $address->save();
+            
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'Address has been updated successfully'
+                    ]);
+                }
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Address not found'
+                ]);
+            }
+            
+        }
+    }
+
+    public function setDefaultAddress(Request $request){
+        $validate = $request->validate([
+            'address_id' => 'required'
+        ], [
+            'address_id.required' => 'Please enter address id'
+        ]);
+
+        $user_id = (!empty(auth('sanctum')->user())) ? auth('sanctum')->user()->id : '';
+
+        if($user_id != ''){
+            $address =  Address::where([
+                'id' => $request->address_id,
+                'user_id' => $user_id
+            ])->first();
+
+            if($address){
+                Address::where('user_id', $user_id)->update(['set_default' => 0]); //make all user addressed non default first
+    
+                $add = Address::find($request->address_id);
+                $add->set_default = 1;
+                $add->save();
+                // echo $address->id;
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Default address has been updated'
+                ]);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Default address not updated'
+                ]);
+            }
+        }else{
+            return response()->json([
+                'status' => false,
+                'message' => 'User not found'
+            ]);
+        }
+    }
+
+    public function deleteAddress(Request $request){
+        $user_id = (!empty(auth('sanctum')->user())) ? auth('sanctum')->user()->id : '';
+
+        if($user_id != ''){
+            $check = Address::where(['id' => $request->address_id,'user_id' => $user_id])->count();
+            if($check != 0){
+                Address::where(['id' => $request->address_id,'user_id' => $user_id])->delete();
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Address deleted successfullty'
+                ]);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Address not found'
+                ]);
+            }
+            
+        }else{
+            return response()->json([
+                'status' => false,
+                'message' => 'User not found'
+            ]);
+        }
+    }
+    
     public function addresses()
     {
         return new AddressCollection(Address::where('user_id', auth()->user()->id)->get());
