@@ -599,6 +599,17 @@ if (!function_exists('api_upload_asset')) {
     }
 }
 
+
+if (!function_exists('storage_link')) {
+    function storage_link($path)
+    {
+        if ($path != null) {
+            return app('url')->asset($path);
+        }
+        return app('url')->asset('assets/img/placeholder.jpg');
+    }
+}
+
 //return file uploaded via uploader
 if (!function_exists('uploaded_asset')) {
     function uploaded_asset($id)

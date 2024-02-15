@@ -117,7 +117,7 @@ class ApiAuthController extends Controller
                 'type' => $user->user_type,
                 'name' => $user->name,
                 'email' => $user->email,
-                'avatar' => $user->avatar,
+                'avatar' => storage_link($user->avatar),
                 'avatar_original' => api_upload_asset($user->avatar_original),
                 'phone' => $user->phone
             ]
