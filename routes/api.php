@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ApiAuthController;
+use App\Http\Controllers\Api\V2\AddressController;
 
 Route::group(['middleware' => 'api','prefix' => 'auth'], function () {
     
@@ -32,7 +33,10 @@ Route::group(['middleware' => 'api','prefix' => 'auth'], function () {
         // Route::post('delete-address', [ApiAuthController::class, 'deleteAddress'])->name('delete-address');
         Route::post('/update-profile-image', [ApiAuthController::class, 'updateProfileImage'])->name('update-profile-image');
         
-        
+        Route::apiResource('address', AddressController::class);
+        Route::post('update-address', [AddressController::class, 'updateAddress'])->name('update-address');
+        Route::post('set-default-address', [AddressController::class, 'setDefaultAddress'])->name('set-default-address');
+        Route::post('delete-address', [AddressController::class, 'deleteAddress'])->name('delete-address');
     });
 
 });
