@@ -269,7 +269,13 @@ class ApiAuthController extends Controller
         $user->phone = $phone;
         $user->name = $name;
         $user->save();
-        return response()->json(['status' => true,'message' => 'User details updated successfully', 'data' => []],200);
+
+        $data['id']             = $user->id ?? '';
+        $data['name']           = $user->name ?? '';
+        $data['email']          = $user->email ?? '';
+        $data['phone']          = $user->phone ?? '';
+        $data['phone_verified'] = $user->is_phone_verified ?? '';
+        return response()->json(['status' => true,'message' => 'User details updated successfully', 'data' => $data],200);
     }
 
       // Update user profile image
