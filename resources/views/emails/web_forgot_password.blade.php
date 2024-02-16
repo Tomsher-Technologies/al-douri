@@ -126,7 +126,9 @@
                                         verification code bellow.
                                         <br><br>
                                         <div align="center" bgcolor="#06b2f4f2" style="border-radius: 28px; font-size: 25px;font-weight: bold;" height="51">
-                                            {{ $user->verification_code }}
+                                            <span style="border: 2px solid black;border-radius: 30px;padding: 0% 4% 0%;">
+                                                {{ $user->verification_code }}
+                                            </span>
                                         </div>
                                                 <br>
                                         <p><b>
