@@ -1,348 +1,171 @@
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ env('APP_NAME') }}</title>
+    <meta http-equiv="Content-Type" content="text/html;" />
+    <meta charset="UTF-8">
+    <style media="all">
+    @font-face {
+        font-family: 'Roboto';
+        src: url("{{ static_asset('fonts/Roboto-Regular.ttf') }}") format("truetype");
+        font-weight: normal;
+        font-style: normal;
+    }
 
-    <head>
-        <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
-        <!--[if gte mso 12]>
-> <style type="text/css">
-> [a.btn {
- padding:15px 22px !important;
- display:inline-block !important;
-}]
-> </style>
-> <![endif]-->
-        <title>SHOP</title>
-        <style type="text/css">
-            div,
-            p,
-            a,
-            li,
-            td {
-                -webkit-text-size-adjust: none;
-            }
+    * {
+        margin: 0;
+        padding: 0;
+        line-height: 1.3;
+        font-family: 'Roboto';
+        color: #333542;
+    }
 
-            .ReadMsgBody {
-                width: 100%;
-                background-color: #cecece;
-            }
+    body {
+        font-size: .875rem;
+    }
 
-            .ExternalClass {
-                width: 100%;
-                background-color: #cecece;
-            }
+    .gry-color *,
+    .gry-color {
+        color: #878f9c;
+    }
 
-            body {
-                width: 100%;
-                height: 100%;
-                background-color: #cecece;
-                margin: 0;
-                padding: 0;
-                -webkit-font-smoothing: antialiased;
-            }
+    table {
+        width: 100%;
+    }
 
-            html {
-                width: 100%;
-            }
+    table th {
+        font-weight: normal;
+    }
 
-            img {
-                border: none;
-            }
+    table.padding th {
+        padding: .5rem .7rem;
+    }
 
-            table td[class=show] {
-                display: none !important;
-            }
+    table.padding td {
+        padding: .7rem;
+    }
 
-            @media only screen and (max-width: 640px) {
-                body {
-                    width: auto !important;
-                }
+    table.sm-padding td {
+        padding: .2rem .7rem;
+    }
 
-                table[class=full] {
-                    width: 100% !important;
-                }
+    .border-bottom td,
+    .border-bottom th {
+        border-bottom: 1px solid #eceff4;
+    }
 
-                table[class=devicewidth] {
-                    width: 100% !important;
-                    padding-left: 20px !important;
-                    padding-right: 20px !important;
-                }
+    .text-left {
+        text-align: left;
+    }
 
-                table[class=inner] {
-                    width: 100% !important;
-                    text-align: center !important;
-                    clear: both;
-                }
+    .text-right {
+        text-align: right;
+    }
 
-                table[class=inner-centerd] {
-                    width: 78% !important;
-                    text-align: center !important;
-                    clear: both;
-                    float: none !important;
-                    margin: 0 auto !important;
-                }
+    .small {
+        font-size: .85rem;
+    }
 
-                table td[class=hide],
-                .hide {
-                    display: none !important;
-                }
+    .currency {}
+    </style>
+</head>
 
-                table td[class=show],
-                .show {
-                    display: block !important;
-                }
-
-                img[class=responsiveimg] {
-                    width: 100% !important;
-                    height: atuo !important;
-                    display: block !important;
-                }
-
-                table[class=btnalign] {
-                    float: left !important;
-                }
-
-                table[class=btnaligncenter] {
-                    float: none !important;
-                    margin: 0 auto !important;
-                }
-
-                table td[class=textalignleft] {
-                    text-align: left !important;
-                    padding: 0 !important;
-                }
-
-                table td[class=textaligcenter] {
-                    text-align: center !important;
-                }
-
-                table td[class=heightsmalldevices] {
-                    height: 45px !important;
-                }
-
-                table td[class=heightSDBottom] {
-                    height: 28px !important;
-                }
-
-                table[class=adjustblock] {
-                    width: 87% !important;
-                }
-
-                table[class=resizeblock] {
-                    width: 92% !important;
-                }
-
-                table td[class=smallfont] {
-                    font-size: 8px !important;
-                }
-            }
-
-            @media only screen and (max-width: 520px) {
-                table td[class=heading] {
-                    font-size: 24px !important;
-                }
-
-                table td[class=heading01] {
-                    font-size: 18px !important;
-                }
-
-                table td[class=heading02] {
-                    font-size: 27px !important;
-                }
-
-                table td[class=text01] {
-                    font-size: 22px !important;
-                }
-
-                table[class="full mhide"],
-                table tr[class=mhide] {
-                    display: none !important;
-                }
-            }
-
-            @media only screen and (max-width: 480px) {
-                table {
-                    border-collapse: collapse;
-                }
-
-                table[id=colaps-inhiret01],
-                table[id=colaps-inhiret02],
-                table[id=colaps-inhiret03],
-                table[id=colaps-inhiret04],
-                table[id=colaps-inhiret05],
-                table[id=colaps-inhiret06],
-                table[id=colaps-inhiret07],
-                table[id=colaps-inhiret08],
-                table[id=colaps-inhiret09] {
-                    border-collapse: inherit !important;
-                }
-            }
-
-            @media only screen and (max-width: 320px) {}
-        </style>
-    </head>
-
-<body style="background-color: #b7e3f978;">
-    <!-- ----------------- Header Start Here ------------------------- -->
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" class="full">
-        <tr>
-            <td class="heightsmalldevices" height="60">&nbsp;</td>
-        </tr>
-        <tr>
-            <td align="center">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" align="center" class="devicewidth">
-                    <tr>
-                        <td>
-                            <table width="100%" bgcolor="#ffffff" border="0" cellspacing="0" cellpadding="0"
-                                align="center" class="full"
-                                style="background-color: #ffffff; border-radius: 5px 5px 0 0">
+<body>
+    <div style="width: 60%;">
+        <table border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#ffffff"
+            style="border: 1px solid #d28a47;">
+            <tbody>
+                <tr>
+                    <td width="650" align="center" valign="middle">
+                        <table border="0" align="center" cellpadding="0" cellspacing="0" style="background:#fff;">
+                            <tbody>
                                 <tr>
-                                    <td>
-                                        <table align="center" border="0" cellspacing="0" cellpadding="0"
-                                            class="inner" style="text-align: center">
-                                            <tr>
-                                                <td width="28" height="52">&nbsp;</td>
-                                                <td>&nbsp;</td>
-                                            </tr>
-                                            <tr>
-                                                <td align="center" valign="middle">
-                                                    <a href="{{ env('WEB_URL') }}">
-                                                        <img src="{{ asset('assets/img/logo.png') }}"
-                                                            height="100" alt="{{ env('APP_NAME') }}"></a>
-                                                </td>
-                                            </tr>
-                                            <tr></tr>
-                                        </table>
-
+                                    <td width="658" align="center" valign="middle">
+                                        <div align="center" style="display: inline; margin: 0; width: 208px">
+                                            <table border="0" align="center" cellpadding="0" cellspacing="0">
+                                                <tbody>
+                                                    <tr>
+                                                        <td width="208" align="center" valign="middle">
+                                                            <a href="{{ env('APP_URL') }}" target="_blank">
+                                                                <img src="{{ asset('assets/img/logo.png') }}"
+                                                                    alt="{{ env('APP_NAME') }}"
+                                                                    title="{{ env('APP_NAME') }}" style="display: block;margin-top: 5px;margin-bottom: 5px;" width="222" ></a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div align="left" style="float: left; display: inline; margin: 0; width: 217px">
+                                            <table border="0" align="left" cellpadding="0" cellspacing="0">
+                                                <tbody>
+                                                    <tr>
+                                                        <td width="217" align="center" valign="middle">
+                                                            Password Reset Request
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </td>
                                 </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-    <!-- ----------------- Header End Here ------------------------- -->
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" class="full">
-        <tr>
-            <td align="center">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" align="center" class="devicewidth">
-                    <tr>
-                        <td>
-                            <table width="100%" bgcolor="#ffffff" border="0" cellspacing="0" cellpadding="0"
-                                align="center" class="full"
-                                style="text-align: center; border-bottom: 1px solid #e5e5e5;padding:0 15px">
+                            </tbody>
+                        </table>
+                       
+                        <table border="0" align="center" cellpadding="0" cellspacing="0">
+                            <tbody>
                                 <tr>
-                                    <td class="heightsmalldevices" height="40">&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <td
-                                        style="font: 700 30px 'Montserrat', Helvetica, Arial, sans-serif;color: #64a644;text-transform: uppercase;">
-                                        Password Reset Request
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td height="21">&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <td
-                                        style="font: 18px Arial, Helvetica, sans-serif;color: #404040;">
+                                    <td width="20" bgcolor="#FFFFFF">&nbsp;</td>
+                                    <td colspan="7" bgcolor="#FFFFFF"
+                                        style="font-family: Arial, Helvetica, sans-serif; font-size: 14px"><br>
+                                        
                                         You have submitted a password change request.
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td height="21">&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <td
-                                        style="font: 18px Arial, Helvetica, sans-serif;color: #404040;">
+                                        <br><br>
                                         If it wasn't you please ignore this email and make sure you can still login
                                         to your account, If it was you, then change your password by using the
                                         verification code bellow.
+                                        <br>
+                                        <div align="center" bgcolor="#06b2f4f2" style="border-radius: 28px; font-size: 25px;font-weight: bold;" height="51">
+                                            {{ $user->verification_code }}
+                                        </div>
+                                                <br>
+                                        <p><b>
+                                            Warm regards,
+                                            <br />
+                                            {{ env('APP_NAME') }} Customer Support Team</b>
+                                        </p>
                                     </td>
+                                    <td width="20" bgcolor="#FFFFFF">&nbsp;</td>
                                 </tr>
-                                <tr>
-                                    <td height="32">&nbsp;</td>
-                                </tr>
-                                <tr>
-                                    <td align="center">
-                                        <table width="250" align="center" border="0" cellspacing="0"
-                                            cellpadding="0"
-                                            style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;text-align: center;">
-                                            <tr>
-                                                <td align="center" bgcolor="#06b2f4f2" style="border-radius: 28px; font-size: 25px;font-weight: bold;"
-                                                    height="51">
-                                                    {{ $user->verification_code }}
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="heightsmalldevices" height="60">&nbsp;</td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" class="full">
-        <tr>
-            <td align="center">
-                <table width="600" border="0" cellspacing="0" cellpadding="0" align="center"
-                    class="devicewidth">
-                    <tr>
-                        <td>
-                            <table width="100%" bgcolor="#64a644" border="0" cellspacing="0" cellpadding="0"
-                                align="center" class="full" style="border-radius:0 0 5px 5px;">
-                                <tr>
-                                    <td height="18">&nbsp;</td>
-                                </tr>
-                                <tr>
+                                <tr align="center">
+                                    <td width="33" rowspan="3" bgcolor="#FFFFFF">&nbsp;</td>
                                     <td>
-                                        <table border="0" cellspacing="0" cellpadding="0" align="center"
-                                            style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt; text-align:center;"
-                                            class="inner">
-                                            <tr>
-                                                <td width="21">&nbsp;</td>
-                                                <td>
-                                                    <table width="100%" border="0" cellspacing="0"
-                                                        cellpadding="0" align="center">
-                                                        <tr>
-                                                            <td align="center"
-                                                                style="font:11px Helvetica,  Arial, sans-serif; color:#ffffff;">
-                                                                &copy; <?= date('Y') ?>, {{ env('APP_NAME') }} All Rights Reserved
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td height="18">&nbsp;</td>
-                                                        </tr>
-                                                    </table>
-                                                </td>
-                                                <td width="21">&nbsp;</td>
-                                            </tr>
-                                        </table>
-
                                     </td>
                                 </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr class="mhide">
-                        <td height="100">&nbsp;</td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
+                            </tbody>
+                        </table>
 
+                        <table border="0" align="center" cellpadding="0" cellspacing="0"
+                            style="background-color: #d28a47">
+                            <tbody>
+                                <tr>
+                                    <td width="648" align="center" valign="middle" style="text-align: center">
+                                        <span style="font-family: Arial, sans-serif; font-size: 12px; color: white;">©
+                                            2023 {{ env('APP_NAME') }}. All Rights Reserved.</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="648" height="5" align="center" valign="middle"
+                                        style="text-align: center">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </body>
 
 </html>
