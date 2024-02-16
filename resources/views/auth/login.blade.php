@@ -2,19 +2,14 @@
 
 @section('content')
     <div class="h-100 bg-cover bg-center py-5 d-flex align-items-center"
-        style="background-image: url({{ uploaded_asset(get_setting('admin_login_background')) }})">
+        style="background-image: url({{ asset('assets/img/login.jpg') }})">
         <div class="container">
             <div class="row">
                 <div class="col-lg-6 col-xl-4 mx-auto">
                     <div class="card text-left">
                         <div class="card-body">
                             <div class="mb-5 text-center">
-                                @if (get_setting('system_logo_black') != null)
-                                    <img src="{{ uploaded_asset(get_setting('system_logo_black')) }}" class="mw-100 mb-4"
-                                        height="40">
-                                @else
-                                    <img src="{{ static_asset('assets/img/logo.png') }}" class="mw-100 mb-4" height="40">
-                                @endif
+                                <img src="{{ asset('assets/img/logo.png') }}" class="mw-100 mb-4" height="100">
                                 <h1 class="h3 text-primary mb-0">{{ translate('Welcome to') }} {{ env('APP_NAME') }}</h1>
                                 <p>{{ translate('Login to your account.') }}</p>
                             </div>
