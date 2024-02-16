@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\ForgotPassword;
 use App\Notifications\EmailVerificationNotification;
 use App\Models\Customer;
 use App\Models\Address;
@@ -575,4 +576,61 @@ class ApiAuthController extends Controller
         return response()->json(['status' => true,'message' => 'Data fetched successfully', 'data' => $data, 'offset' => ($offset + $limit) ],200);
     }
     
+    public function forgetRequest(Request $request)
+    {
+        $email = $request->has('email') ? $request->email : '';
+        if($email){
+            $user = User::where('email', $request->email)->first();
+            if (!$user) {
+                return response()->json([
+                    'status' => false,
+                    'message' => translate('User is not found')], 200);
+            }else{
+                $user->verification_code = rand(100000, 999999);
+                $user->save();
+                $user->notify(new ForgotPassword($user));
+                return response()->json([
+                    'status' => true,
+                    'message' => translate('Verification code is sent')
+                ], 200);
+            }
+        }else{
+            return response()->json([
+                'status' => false,
+                'message' => translate('Email is not found')], 200);
+        }
+    }
+
+    public function resetRequest(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|string|min:6'
+        ]);
+        $code = $request->has('code') ? $request->code : '';
+        $email = $request->has('email') ? $request->email : '';
+        $password = $request->has('password')? trim($request->password): '';
+
+        if($code != '' && $email != '' &&  $password != ''){
+            $user = User::where('email', $email)->where('verification_code', $code)->first();
+            if ($user != null) {
+                $user->verification_code = null;
+                $user->password = Hash::make($password);
+                $user->save();
+                return response()->json([
+                    'status' => true,
+                    'message' => translate('Your password is reset.Please login'),
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => translate('Invalid verification code'),
+                ], 200);
+            }
+        }else {
+            return response()->json([
+                'status' => false,
+                'message' => translate('Please fill all the fields'),
+            ], 200);
+        }
+    }
 }

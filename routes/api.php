@@ -10,6 +10,9 @@ Route::group(['middleware' => 'api','prefix' => 'auth'], function () {
     Route::post('/login', [ApiAuthController::class, 'login'])->name('login');
     Route::post('/otp-login', [ApiAuthController::class, 'loginWithOTP'])->name('otp-login');
     Route::post('/register', [ApiAuthController::class, 'signup'])->name('register');
+    Route::post('/forgot-password', [ApiAuthController::class, 'forgetRequest'])->name('forgot-password');
+    Route::post('reset-password', [ApiAuthController::class, 'resetRequest']);
+
 
     Route::post('/verify-otp', [ApiAuthController::class, 'verifyOTP'])->name('verify-otp');
     Route::post('/resend-otp', [ApiAuthController::class, 'resendOTP'])->name('resend-otp');
