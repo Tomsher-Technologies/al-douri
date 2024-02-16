@@ -247,22 +247,17 @@ class ApiAuthController extends Controller
     public function updateProfile(Request $request){
         $id = $request->user()->id;
         $validator = Validator::make($request->all(), [
-            'email' => 'nullable|email|unique:users,email,'.$id,
             'phone_number' => 'nullable|unique:users,phone,'.$id,
         ]);
         
         if($validator->fails()){
             $errors = $validator->errors();
-            if ($errors->has('email')) {
-                return response()->json(['status' => false, 'message' => $errors->first('email'), 'data' => []  ], 200);
-            }
             if ($errors->has('phone_number')) {
                 return response()->json(['status' => false, 'message' => $errors->first('phone_number'), 'data' => []  ], 200);
             }
         }
         
         $name   = $request->name;
-        $email  = $request->email;
         $phone  = $request->phone_number;
        
         $user = User::find($id);
@@ -273,7 +268,6 @@ class ApiAuthController extends Controller
         }
         $user->phone = $phone;
         $user->name = $name;
-        $user->email = $email;
         $user->save();
         return response()->json(['status' => true,'message' => 'User details updated successfully', 'data' => []],200);
     }
