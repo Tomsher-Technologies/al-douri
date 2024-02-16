@@ -101,7 +101,7 @@
                                                 <tbody>
                                                     <tr>
                                                         <td width="217" align="center" valign="middle">
-                                                            Password Reset Request
+                                                            
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -124,7 +124,7 @@
                                         If it wasn't you please ignore this email and make sure you can still login
                                         to your account, If it was you, then change your password by using the
                                         verification code bellow.
-                                        <br>
+                                        <br><br>
                                         <div align="center" bgcolor="#06b2f4f2" style="border-radius: 28px; font-size: 25px;font-weight: bold;" height="51">
                                             {{ $user->verification_code }}
                                         </div>
