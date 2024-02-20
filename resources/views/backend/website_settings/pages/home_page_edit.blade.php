@@ -479,6 +479,7 @@
 					</div>
 					<div class="text-right">
 						<button type="submit" class="btn btn-primary">{{ translate('Update') }}</button>
+						<a href="{{ route('website.pages') }}" class="btn btn-info">Cancel</a>
 					</div>
 				</form>
 			</div>
