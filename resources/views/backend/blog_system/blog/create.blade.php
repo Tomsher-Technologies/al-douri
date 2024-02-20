@@ -104,37 +104,37 @@
                     <div class="form-group row">
                             <label class="col-sm-3 col-from-label" for="name">{{translate('Meta Title')}}</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" placeholder="{{translate('Title')}}" name="meta_title">
+                                <input type="text" class="form-control" placeholder="{{translate('Title')}}" name="meta_title" value="{{ old('meta_title') }}">
                             </div>
                     </div>
     
                     <div class="form-group row">
                         <label class="col-sm-3 col-from-label" for="name">{{translate('Meta Description')}}</label>
                         <div class="col-sm-9">
-                            <textarea class="resize-off form-control" placeholder="{{translate('Description')}}" name="meta_description"></textarea>
+                            <textarea class="resize-off form-control" placeholder="{{translate('Description')}}" name="meta_description">{{ old('meta_description') }}</textarea>
                         </div>
                     </div>
         
                     <div class="form-group row">
-                            <label class="col-sm-3 col-from-label" for="name">{{translate('Keywords')}}</label>
-                            <div class="col-sm-9">
-                                <textarea class="resize-off form-control" placeholder="{{translate('Keyword, Keyword')}}" name="keywords"></textarea>
-                                <small class="text-muted">{{ translate('Separate with coma') }}</small>
-                            </div>
+                        <label class="col-sm-3 col-from-label" for="name">{{translate('Keywords')}}</label>
+                        <div class="col-sm-9">
+                            <textarea class="resize-off form-control" placeholder="{{translate('Keyword, Keyword')}}" name="keywords">{{ old('keywords') }}</textarea>
+                            <small class="text-muted">{{ translate('Separate with coma') }}</small>
+                        </div>
                     </div>
         
                     <div class="form-group row">
                         <label class="col-sm-3 col-from-label" for="name">{{ translate('OG Title') }}</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control" placeholder="{{ translate('OG Title') }}"
-                                name="og_title">
+                                name="og_title" value="{{ old('og_title') }}">
                         </div>
                     </div>
         
                     <div class="form-group row">
                         <label class="col-sm-3 col-from-label" for="name">{{ translate('OG Description') }}</label>
                         <div class="col-sm-9">
-                            <textarea class="resize-off form-control" placeholder="{{ translate('OG Description') }}" name="og_description"></textarea>
+                            <textarea class="resize-off form-control" placeholder="{{ translate('OG Description') }}" name="og_description">{{ old('og_description') }}</textarea>
                         </div>
                     </div>
         
@@ -142,7 +142,7 @@
                         <label class="col-sm-3 col-from-label" for="name">{{ translate('Twitter Title') }}</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control" placeholder="{{ translate('Twitter Title') }}"
-                                name="twitter_title">
+                                name="twitter_title" value="{{ old('twitter_title') }}">
                         </div>
                     </div>
         
@@ -150,29 +150,30 @@
                         <label class="col-sm-3 col-from-label" for="name">{{ translate('Twitter Description') }}</label>
                         <div class="col-sm-9">
                             <textarea class="resize-off form-control" placeholder="{{ translate('Twitter Description') }}"
-                                name="twitter_description"></textarea>
+                                name="twitter_description">{{ old('twitter_description') }}</textarea>
                         </div>
                     </div>
         
                     <div class="form-group row">
-                            <label class="col-sm-3 col-from-label" for="name">{{translate('Meta Image')}}</label>
-                            <div class="col-sm-9">
-                                <div class="input-group " data-toggle="aizuploader" data-type="image">
-                                        <div class="input-group-prepend">
-                                                <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse') }}</div>
-                                        </div>
-                                        <div class="form-control file-amount">{{ translate('Choose File') }}</div>
-                                        <input type="hidden" name="meta_image" class="selected-files">
-                                </div>
-                                <div class="file-preview">
-                                </div>
+                        <label class="col-sm-3 col-from-label" for="name">{{translate('Meta Image')}}</label>
+                        <div class="col-sm-9">
+                            <div class="input-group " data-toggle="aizuploader" data-type="image">
+                                    <div class="input-group-prepend">
+                                            <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse') }}</div>
+                                    </div>
+                                    <div class="form-control file-amount">{{ translate('Choose File') }}</div>
+                                    <input type="hidden" name="meta_image" class="selected-files">
                             </div>
+                            <div class="file-preview">
+                            </div>
+                        </div>
                     </div>
                     
                     <div class="form-group mb-0 text-right">
                         <button type="submit" class="btn btn-primary">
                             {{translate('Save')}}
                         </button>
+                        <a href="{{ route('news.index') }}" class="btn btn-info">Cancel</a>
                     </div>
                 </form>
             </div>

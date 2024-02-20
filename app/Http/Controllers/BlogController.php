@@ -87,50 +87,43 @@ class BlogController extends Controller
     public function edit(string $id)
     {
         $blog = Blog::find($id);
-        return view('backend.blogs.edit', compact('blog'));
+        return view('backend.blog_system.blog.edit', compact('blog'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        $blog = Blog::find($request->blog);
         $request->validate([
-            'image' => 'nullable|max:1024',
-            'title' => 'required',
-            'ar_title' => 'required',
-            'content' => 'required',
-            'ar_content' => 'required',
-            'news_date' => 'required', 
-            'status' => 'required',
-        ],[
-            'image.uploaded' => 'File size should be less than 1 MB'
-        ]);
+            'image'         => 'nullable',
+            'title'         => 'required',
+            'ar_title'      => 'required',
+            'content'       => 'required',
+            'ar_content'    => 'required',
+            'news_date'     => 'required'
+        ],['*.required' => 'This field is required']);
 
+        $blog                       = Blog::find($id);
         $blog->title                = $request->title;
         $blog->ar_title             = $request->ar_title;
         $blog->content              = $request->content;
         $blog->ar_content           = $request->ar_content;
         $blog->status               = $request->status;
         $blog->blog_date            = $request->news_date;
-        $blog->seo_title            = $request->seotitle;
-        $blog->og_title             = $request->ogtitle; 
-        $blog->twitter_title        = $request->twtitle;
-        $blog->seo_description      = $request->seodescription;
+        $blog->seo_title            = $request->meta_title;
+        $blog->og_title             = $request->og_title; 
+        $blog->twitter_title        = $request->twitter_title;
+        $blog->seo_description      = $request->meta_description;
         $blog->og_description       = $request->og_description;
         $blog->twitter_description  = $request->twitter_description; 
-        $blog->keywords             = $request->seokeywords;
-    
-        if ($request->hasFile('image')) {
-            $image = uploadImage($request, 'image', 'blogs');
-            deleteImage($blog->image);
-            $blog->image = $image;
-        }
-
+        $blog->keywords             = $request->keywords;
+        $blog->image                = $request->image;
+        $blog->meta_image           = $request->meta_image;
         $blog->save();
 
-        return redirect()->route('news.index')->with('status','Blog details updated successfully');
+        flash(translate('News details updated successfully'))->success();
+        return redirect()->route('news.index');
     }
 
     /**
@@ -138,13 +131,23 @@ class BlogController extends Controller
      */
     public function destroy(Request $request)
     {
-        $blog = Blog::find($request->blog);
-        $img = $blog->image;
-        if ($blog->delete()) {
-            deleteImage($img);
-        }
+        $blog = Blog::find($request->id);
+        $blog->delete();
         return redirect()->route('news.index')->with([
             'status' => "Blog Deleted"
         ]);
+    }
+
+    public function change_status(Request $request){
+        $id = $request->id;
+        $status = $request->status;
+
+        $blog = Blog::find($id);
+        $blog->status = $status;
+        if($blog->save()){
+            echo 1;
+        }else{
+            echo 0;
+        }
     }
 }
