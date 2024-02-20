@@ -13,6 +13,7 @@
 
 use App\Http\Controllers\Admin\AbandonedCartController;
 use App\Http\Controllers\Admin\ShopsController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AizUploadController;
 use App\Http\Controllers\AttributeController;
@@ -219,9 +220,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     //Blog Section
     // Route::resource('blog-category', 'BlogCategoryController');
     // Route::get('/blog-category/destroy/{id}', [BlogCategoryController::class,'destroy'])->name('blog-category.destroy');
-    // Route::resource('blog', 'BlogController');
-    // Route::get('/blog/destroy/{id}', [BlogController::class,'destroy'])->name('blog.destroy');
-    // Route::post('/blog/change-status', [BlogController::class,'change_status'])->name('blog.change-status');
+    Route::resource('news', BlogController::class);
+    Route::get('/news/destroy/{id}', [BlogController::class,'destroy'])->name('news.destroy');
+    Route::post('/news/change-status', [BlogController::class,'change_status'])->name('news.change-status');
 
     //Coupons
     Route::resource('coupon', CouponController::class);
@@ -285,4 +286,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::get('/all-notification', [NotificationController::class, 'index'])->name('admin.all-notification');
 
     Route::get('/cache-cache', [AdminController::class, 'clearCache'])->name('cache.clear');
+
+    Route::resource('custom-pages', PageController::class);
+    Route::get('/custom-pages/edit/{id}', [PageController::class, 'edit'])->name('custom-pages.edit');
+
+    Route::get('/pages', [WebsiteController::class, 'pages'])->name('website.pages');
 });

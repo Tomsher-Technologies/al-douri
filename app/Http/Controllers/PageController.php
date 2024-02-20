@@ -37,6 +37,7 @@ class PageController extends Controller
      */
     public function store(Request $request)
     {
+        
         $page = new Page;
         $page->title = $request->title;
         if (Page::where('slug', preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $request->slug)))->first() == null) {
@@ -83,12 +84,15 @@ class PageController extends Controller
    {
         $lang = $request->lang;
         $page_name = $request->page;
-        $page = Page::where('slug', $id)->first();
+        $page = Page::where('type', $id)->first();
         if($page != null){
-          if ($page_name == 'home') {
+          if ($id == 'home') {
             return view('backend.website_settings.pages.home_page_edit', compact('page','lang'));
-          }
-          else{
+          }else if ($id == 'find_us' || $id == 'news') {
+            return view('backend.website_settings.pages.find_us', compact('page','lang'));
+          }else if ($id == 'contact_us') {
+            return view('backend.website_settings.pages.contact_us', compact('page','lang'));
+          }else{
             return view('backend.website_settings.pages.edit', compact('page','lang'));
           }
         }
@@ -105,32 +109,31 @@ class PageController extends Controller
     public function update(Request $request, $id)
     {
         $page = Page::findOrFail($id);
-        if (Page::where('id','!=', $id)->where('slug', preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $request->slug)))->first() == null) {
-            if($page->type == 'custom_page'){
-              $page->slug           = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $request->slug));
-            }
-            if($request->lang == env("DEFAULT_LANGUAGE")){
-              $page->title          = $request->title;
-              $page->content        = $request->content;
-            }
-            $page->meta_title       = $request->meta_title;
-            $page->meta_description = $request->meta_description;
-            $page->keywords         = $request->keywords;
-            $page->meta_image       = $request->meta_image;
-            $page->save();
-
-            $page_translation           = PageTranslation::firstOrNew(['lang' => $request->lang, 'page_id' => $page->id]);
-            $page_translation->title    = $request->title;
-            $page_translation->content  = $request->content;
+        if ($page) {
+            $page_translation                       = PageTranslation::firstOrNew(['lang' => $request->lang, 'page_id' => $page->id]);
+            $page_translation->title                = $request->title;
+            $page_translation->content              = $request->has('content') ? $request->content : NULL;
+            $page_translation->sub_title            = $request->has('sub_title') ? $request->sub_title : NULL;
+            $page_translation->heading1             = $request->has('heading1') ? $request->heading1 : NULL;
+            $page_translation->heading2             = $request->has('heading2') ? $request->heading2 : NULL;
+            $page_translation->heading3             = $request->has('heading3') ? $request->heading3 : NULL;
+            $page_translation->heading4             = $request->has('heading4') ? $request->heading4 : NULL;
+            $page_translation->meta_title           = $request->meta_title;
+            $page_translation->meta_description     = $request->meta_description;
+            $page_translation->og_title             = $request->og_title;
+            $page_translation->og_description       = $request->og_description;
+            $page_translation->twitter_title        = $request->twitter_title;
+            $page_translation->twitter_description  = $request->twitter_description;
+            $page_translation->keywords             = $request->keywords;
+            $page_translation->meta_image           = $request->meta_image;
             $page_translation->save();
 
-            flash(translate('Page has been updated successfully'))->success();
+            flash(translate('Page data has been updated successfully'))->success();
             return redirect()->route('website.pages');
         }
 
-      flash(translate('Slug has been used already'))->warning();
-      return back();
-
+        flash(translate('Page details not found'))->warning();
+        return back();
     }
 
     /**

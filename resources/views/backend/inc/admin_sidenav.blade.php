@@ -541,6 +541,15 @@
                     </li>
                 @endif
                 @if (Auth::user()->user_type == 'admin' || (Auth::user()->user_type == 'staff' && in_array('23', json_decode(Auth::user()->staff->role->permissions))))
+
+                    <li class="aiz-side-nav-item">
+                        <a href="{{ route('news.index') }}"
+                            class="aiz-side-nav-link {{ areActiveRoutes(['news.index','news.create','news.edit']) }}">
+                            <i class="las la-bullhorn aiz-side-nav-icon"></i>
+                            <span class="aiz-side-nav-text">{{ translate('News') }}</span>
+                        </a>
+                    </li>
+
                     <!--Blog System-->
                     {{-- <li class="aiz-side-nav-item">
                         <a href="#" class="aiz-side-nav-link">
@@ -604,6 +613,26 @@
                         </ul>
                     </li>
                 @endif
+
+                @if (Auth::user()->user_type == 'admin' || (Auth::user()->user_type == 'staff' && in_array('21', json_decode(Auth::user()->staff->role->permissions))))
+                    <li class="aiz-side-nav-item">
+                        <a href="#" class="aiz-side-nav-link">
+                            <i class="las la-bullhorn aiz-side-nav-icon"></i>
+                            <span class="aiz-side-nav-text">{{ translate('Website Setup') }}</span>
+                            <span class="aiz-side-nav-arrow"></span>
+                        </a>
+                        <ul class="aiz-side-nav-list level-2">
+
+                            <li class="aiz-side-nav-item">
+                                <a href="{{ route('website.pages') }}"
+                                    class="aiz-side-nav-link {{ areActiveRoutes(['website.pages', 'custom-pages.create', 'custom-pages.edit']) }}">
+                                    <span class="aiz-side-nav-text">{{ translate('Pages') }}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                @endif
+                
 
                 <!-- Support -->
                 {{-- @if (Auth::user()->user_type == 'admin' || (Auth::user()->user_type == 'staff' && in_array('12', json_decode(Auth::user()->staff->role->permissions))))

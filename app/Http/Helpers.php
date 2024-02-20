@@ -1023,3 +1023,23 @@ if (!function_exists('addon_is_activated')) {
         }
         return array();
     }
+
+    function uploadImage(Request $request, $input, $path, $uniqueName = true)
+    {
+        if ($request->hasFile($input)) {
+            $uploadedFile = $request->file($input);
+            $filename =   time() . $uploadedFile->getClientOriginalName();
+            if (!$uniqueName) {
+                $filename = $uploadedFile->getClientOriginalName();
+            }
+
+            $name = Storage::disk('public')->putFileAs(
+                $path,
+                $uploadedFile,
+                $filename
+            );
+
+            return Storage::url($name);
+        }
+        return null;
+    }
