@@ -28,7 +28,7 @@
         <link rel="stylesheet" href="{{ static_asset('assets/css/bootstrap-rtl.min.css') }}">
     @endif
     <link rel="stylesheet" href="{{ static_asset('assets/css/aiz-core.css') }}">
-
+    @yield('header')
     <style>
         body {
             font-size: 14px;

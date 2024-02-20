@@ -20,16 +20,7 @@
 					<input type="text" class="form-control" placeholder="{{translate('Title')}}" name="title" required>
 				</div>
 			</div>
-			<div class="form-group row">
-				<label class="col-sm-2 col-from-label" for="name">{{translate('Link')}} <span class="text-danger">*</span></label>
-				<div class="col-sm-10">
-					<div class="input-group d-block d-md-flex">
-						<div class="input-group-prepend "><span class="input-group-text flex-grow-1">{{ route('home') }}/</span></div>
-						<input type="text" class="form-control w-100 w-md-auto" placeholder="{{ translate('Slug') }}" name="slug" required>
-					</div>
-					<small class="form-text text-muted">{{ translate('Use character, number, hypen only') }}</small>
-				</div>
-			</div>
+			
 			<div class="form-group row">
 				<label class="col-sm-2 col-from-label" for="name">{{translate('Add Content')}} <span class="text-danger">*</span></label>
 				<div class="col-sm-10">
@@ -70,6 +61,38 @@
 						<textarea class="resize-off form-control" placeholder="{{translate('Keyword, Keyword')}}" name="keywords"></textarea>
 						<small class="text-muted">{{ translate('Separate with coma') }}</small>
 					</div>
+			</div>
+
+			<div class="form-group row">
+				<label class="col-sm-2 col-from-label" for="name">{{ translate('OG Title') }}</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" placeholder="{{ translate('OG Title') }}"
+						name="og_title">
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label class="col-sm-2 col-from-label" for="name">{{ translate('OG Description') }}</label>
+				<div class="col-sm-10">
+					<textarea class="resize-off form-control" placeholder="{{ translate('OG Description') }}" name="og_description"></textarea>
+				</div>
+			</div>
+
+
+			<div class="form-group row">
+				<label class="col-sm-2 col-from-label" for="name">{{ translate('Twitter Title') }}</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" placeholder="{{ translate('Twitter Title') }}"
+						name="twitter_title">
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label class="col-sm-2 col-from-label" for="name">{{ translate('Twitter Description') }}</label>
+				<div class="col-sm-10">
+					<textarea class="resize-off form-control" placeholder="{{ translate('Twitter Description') }}"
+						name="twitter_description"></textarea>
+				</div>
 			</div>
 
 			<div class="form-group row">

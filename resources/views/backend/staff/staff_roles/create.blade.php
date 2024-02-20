@@ -58,7 +58,7 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="row">
+                        {{-- <div class="row">
                             <div class="col-md-10">
                                 <label class="col-from-label">{{ translate('Inhouse orders') }}</label>
                             </div>
@@ -79,8 +79,8 @@
                                     <span class="slider round"></span>
                                 </label>
                             </div>
-                        </div>
-                        <div class="row">
+                        </div> --}}
+                        {{-- <div class="row">
                             <div class="col-md-10">
                                 <label class="col-from-label">{{ translate('Pick-up Point Order') }}</label>
                             </div>
@@ -90,7 +90,7 @@
                                     <span class="slider round"></span>
                                 </label>
                             </div>
-                        </div>
+                        </div> --}}
                         @if (addon_is_activated('refund_request'))
                           <div class="row">
                               <div class="col-md-10">
@@ -115,7 +115,7 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="row">
+                        {{-- <div class="row">
                             <div class="col-md-10">
                                 <label class="col-from-label">{{ translate('Sellers') }}</label>
                             </div>
@@ -125,7 +125,7 @@
                                     <span class="slider round"></span>
                                 </label>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="row">
                             <div class="col-md-10">
                                 <label class="col-from-label">{{ translate('Reports') }}</label>
@@ -148,7 +148,7 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="row">
+                        {{-- <div class="row">
                             <div class="col-md-10">
                                 <label class="col-from-label">{{ translate('Support') }}</label>
                             </div>
@@ -158,7 +158,7 @@
                                     <span class="slider round"></span>
                                 </label>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="row">
                             <div class="col-md-10">
                                 <label class="col-from-label">{{ translate('Website Setup') }}</label>
@@ -257,7 +257,7 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="row">
+                        {{-- <div class="row">
                             <div class="col-md-10">
                                 <label class="col-from-label">{{ translate('Addon Manager') }}</label>
                             </div>
@@ -267,7 +267,7 @@
                                     <span class="slider round"></span>
                                 </label>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="row">
                             <div class="col-md-10">
                                 <label class="col-from-label">{{ translate('Uploaded Files') }}</label>
@@ -281,7 +281,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-10">
-                                <label class="col-from-label">{{ translate('Blog System') }}</label>
+                                <label class="col-from-label">{{ translate('News') }}</label>
                             </div>
                             <div class="col-md-2">
                                 <label class="aiz-switch aiz-switch-success mb-0">
@@ -291,7 +291,7 @@
                             </div>
                         </div>
                         
-                        <div class="row">
+                        {{-- <div class="row">
                             <div class="col-md-10">
                                 <label class="col-from-label">{{ translate('System') }}</label>
                             </div>
@@ -301,7 +301,7 @@
                                     <span class="slider round"></span>
                                 </label>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="row">
                             <div class="col-md-10">
                                 <label class="col-from-label">{{ translate('Shops') }}</label>
