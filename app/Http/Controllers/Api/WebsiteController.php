@@ -9,7 +9,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Frontend\Banner;
 use App\Models\Frontend\HomeSlider;
-use App\Models\Shops;
+use App\Models\Shop;
 use App\Models\Page;
 use App\Models\PageTranslation;
 use App\Models\Faqs;
@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use App\Mail\ContactEnquiry;
 use Cache;
 use Mail;
+use Validator;
 
 class WebsiteController extends Controller
 {
@@ -85,10 +86,21 @@ class WebsiteController extends Controller
         ]);
     }
 
-    public function storeLocations(){
-        $shops = Shops::where('status',1)->orderBy('name','asc')->get();
+    public function storeLocations(Request $request){
+        $lang       = $request->has('lang') ? (($request->lang == 'ar') ? 'ae' : $request->lang) : 'en';
 
-        $meta = Page::where('type', 'store_locator')->select('title', 'sub_title', 'meta_title', 'meta_description', 'keywords', 'og_title', 'og_description', 'twitter_title', 'twitter_description', 'meta_image')->first();
+        if($lang == 'ae'){
+            $selectFaq = ['id', 'name_ar as name', 'address_ar as address', 'phone', 'email', 'delivery_pickup_latitude as latitude', 'delivery_pickup_longitude as longitude'];
+        }else{
+            $selectFaq = ['id', 'name', 'address', 'phone', 'email', 'delivery_pickup_latitude as latitude', 'delivery_pickup_longitude as longitude'];
+        }
+        $shops = Shop::without(['user'])->select($selectFaq)->where('status',1)->orderBy('name','asc')->get();
+
+        $meta = PageTranslation::leftJoin('pages as p','p.id', '=' ,'page_translations.page_id')
+                                    ->where('lang', $lang)
+                                    ->where('p.type', 'find_us')
+                                    ->select('page_translations.title', 'page_translations.meta_title', 'page_translations.meta_description', 'page_translations.keywords', 'page_translations.og_title', 'page_translations.og_description', 'page_translations.twitter_title', 'page_translations.twitter_description', 'page_translations.meta_image')
+                                    ->first();
         // $shops['page_data'] = $query;
         if($meta){
             $meta->meta_image       = ($meta->meta_image != NULL) ? uploaded_asset($meta->meta_image) : '';
@@ -152,22 +164,39 @@ class WebsiteController extends Controller
     }
 
     public function contactUs(Request $request){
-        $validate = $request->validate([
+
+        $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' => 'required|email',
             'phone' => 'required|numeric',
             'message' => 'required'
-        ], [
+        ],[
             'name.required' => 'Please enter your name',
             'email.required' => 'Please enter your email',
             'phone.required' => 'Please enter your phone',
             'message.required' => 'Please enter your message'
         ]);
 
+        if($validator->fails()){
+            if($request->name == '' || $request->email == '' || $request->phone == '' || $request->message == ''){
+                return response()->json(['status' => false, 'message' => 'Please make sure that you fill out all the required fields..', 'data' => []  ], 200);
+            }else{
+                $errors = $validator->errors();
+                if ($errors->has('email')) {
+                    return response()->json(['status' => false, 'message' => $errors->first('email'), 'data' => []  ], 200);
+                }
+                if ($errors->has('phone')) {
+                    return response()->json(['status' => false, 'message' => $errors->first('phone'), 'data' => []  ], 200);
+                }
+                return response()->json(['status' => false, 'message' => 'Something went wrong', 'data' => []  ], 200);
+            }
+        }
+
         $con                = new Contacts;
         $con->name          = $request->name;
         $con->email         = $request->email;
-        $con->phone  = $request->phone;
+        $con->phone         = $request->phone;
+        $con->subject       = $request->subject;
         $con->message       = $request->message;
         $con->save();
 
