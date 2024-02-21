@@ -624,6 +624,13 @@
                         <ul class="aiz-side-nav-list level-2">
 
                             <li class="aiz-side-nav-item">
+                                <a href="{{ route('faq.index') }}"
+                                    class="aiz-side-nav-link {{ areActiveRoutes(['faq.index', 'faq.create', 'faq.edit']) }}">
+                                    <span class="aiz-side-nav-text">{{ translate('FAQ') }}</span>
+                                </a>
+                            </li>
+
+                            <li class="aiz-side-nav-item">
                                 <a href="{{ route('website.pages') }}"
                                     class="aiz-side-nav-link {{ areActiveRoutes(['website.pages', 'custom-pages.create', 'custom-pages.edit']) }}">
                                     <span class="aiz-side-nav-text">{{ translate('Pages') }}</span>

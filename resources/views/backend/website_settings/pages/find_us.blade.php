@@ -32,7 +32,7 @@
 			<div class="form-group row">
 				<label class="col-sm-2 col-from-label" for="name">{{translate('Title')}} <span class="text-danger">*</span> <i class="las la-language text-danger" title="{{translate('Translatable')}}"></i></label>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" placeholder="{{translate('Title')}}" name="title" value="{{ $page->getTranslation('title',$lang) }}" required>
+					<input type="text" class="form-control" placeholder="{{translate('Title')}}" name="title" value="{{ $page->getTranslation('title',$lang) }}" required @if($lang == 'ae') dir="rtl" @endif>
 				</div>
 			</div>
 		</div>
@@ -45,21 +45,21 @@
 			<div class="form-group row">
 				<label class="col-sm-2 col-from-label" for="name">{{translate('Meta Title')}}</label>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" placeholder="{{translate('Title')}}" name="meta_title" value="{{ $page->getTranslation('meta_title',$lang) }}">
+					<input type="text" class="form-control" placeholder="{{translate('Title')}}" name="meta_title" value="{{ $page->getTranslation('meta_title',$lang) }}" @if($lang == 'ae') dir="rtl" @endif>
 				</div>
 			</div>
 
 			<div class="form-group row">
 				<label class="col-sm-2 col-from-label" for="name">{{translate('Meta Description')}}</label>
 				<div class="col-sm-10">
-					<textarea class="resize-off form-control" placeholder="{{translate('Description')}}" name="meta_description">{!! $page->getTranslation('meta_description',$lang) !!}</textarea>
+					<textarea class="resize-off form-control" placeholder="{{translate('Description')}}" name="meta_description"  @if($lang == 'ae') dir="rtl" @endif>{!! $page->getTranslation('meta_description',$lang) !!}</textarea>
 				</div>
 			</div>
 
 			<div class="form-group row">
 				<label class="col-sm-2 col-from-label" for="name">{{translate('Keywords')}}</label>
 				<div class="col-sm-10">
-					<textarea class="resize-off form-control" placeholder="{{translate('Keyword, Keyword')}}" name="keywords">{!! $page->getTranslation('keywords',$lang) !!}</textarea>
+					<textarea class="resize-off form-control" placeholder="{{translate('Keyword, Keyword')}}" name="keywords" @if($lang == 'ae') dir="rtl" @endif>{!! $page->getTranslation('keywords',$lang) !!}</textarea>
 					<small class="text-muted">{{ translate('Separate with coma') }}</small>
 				</div>
 			</div>
@@ -68,14 +68,14 @@
 				<label class="col-sm-2 col-from-label" for="name">{{ translate('OG Title') }}</label>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" placeholder="{{ translate('OG Title') }}"
-						name="og_title" value="{!! $page->getTranslation('og_title',$lang) !!}">
+						name="og_title" value="{!! $page->getTranslation('og_title',$lang) !!}" @if($lang == 'ae') dir="rtl" @endif>
 				</div>
 			</div>
 
 			<div class="form-group row">
 				<label class="col-sm-2 col-from-label" for="name">{{ translate('OG Description') }}</label>
 				<div class="col-sm-10">
-					<textarea class="resize-off form-control" placeholder="{{ translate('OG Description') }}" name="og_description">{!! $page->getTranslation('og_description',$lang) !!}</textarea>
+					<textarea class="resize-off form-control" placeholder="{{ translate('OG Description') }}" name="og_description" @if($lang == 'ae') dir="rtl" @endif>{!! $page->getTranslation('og_description',$lang) !!}</textarea>
 				</div>
 			</div>
 
@@ -84,7 +84,7 @@
 				<label class="col-sm-2 col-from-label" for="name">{{ translate('Twitter Title') }}</label>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" placeholder="{{ translate('Twitter Title') }}"
-						name="twitter_title" value="{!! $page->getTranslation('twitter_title',$lang) !!}">
+						name="twitter_title" value="{!! $page->getTranslation('twitter_title',$lang) !!}" @if($lang == 'ae') dir="rtl" @endif>
 				</div>
 			</div>
 
@@ -92,7 +92,7 @@
 				<label class="col-sm-2 col-from-label" for="name">{{ translate('Twitter Description') }}</label>
 				<div class="col-sm-10">
 					<textarea class="resize-off form-control" placeholder="{{ translate('Twitter Description') }}"
-						name="twitter_description">{!! $page->getTranslation('twitter_description',$lang) !!}</textarea>
+						name="twitter_description" @if($lang == 'ae') dir="rtl" @endif>{!! $page->getTranslation('twitter_description',$lang) !!}</textarea>
 				</div>
 			</div>
 
