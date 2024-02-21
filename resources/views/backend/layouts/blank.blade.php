@@ -10,7 +10,7 @@
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg" href="{{ asset('assets/img/favicon.ico') }}">
-	<title>{{ env('APP_URL') }}</title>
+	<title>{{ env('APP_NAME') }}</title>
     <!-- google font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700">
 
