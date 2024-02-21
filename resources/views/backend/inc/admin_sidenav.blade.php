@@ -623,6 +623,17 @@
                         </a>
                         <ul class="aiz-side-nav-list level-2">
 
+                            {{-- <li class="aiz-side-nav-item">
+                                <a href="{{ route('website.header') }}" class="aiz-side-nav-link">
+                                    <span class="aiz-side-nav-text">{{translate('Header')}}</span>
+                                </a>
+                            </li> --}}
+                            {{-- <li class="aiz-side-nav-item">
+                                <a href="{{ route('website.footer', ['lang'=>  App::getLocale()] ) }}" class="aiz-side-nav-link {{ areActiveRoutes(['website.footer'])}}">
+                                    <span class="aiz-side-nav-text">{{translate('Footer')}}</span>
+                                </a>
+                            </li> --}}
+
                             <li class="aiz-side-nav-item">
                                 <a href="{{ route('faq.index') }}"
                                     class="aiz-side-nav-link {{ areActiveRoutes(['faq.index', 'faq.create', 'faq.edit']) }}">

@@ -52,6 +52,8 @@ Route::group(['middleware' => 'api','prefix' => 'auth'], function () {
         Route::get('store-locator', [WebsiteController::class, 'storeLocations']);
         Route::get('page-contents', [WebsiteController::class, 'pageContents']);
         Route::post('contact-us', [WebsiteController::class, 'contactUs']);
+        Route::get('news', [WebsiteController::class, 'news']);
+        Route::get('blog-details', [WebsiteController::class, 'blogDetails']);
     });
 });
 

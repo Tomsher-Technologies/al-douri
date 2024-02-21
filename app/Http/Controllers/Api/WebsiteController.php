@@ -13,6 +13,7 @@ use App\Models\Shop;
 use App\Models\Page;
 use App\Models\PageTranslation;
 use App\Models\Faqs;
+use App\Models\Blog;
 use App\Models\Contacts;
 use Illuminate\Http\Request;
 use App\Mail\ContactEnquiry;
@@ -203,5 +204,56 @@ class WebsiteController extends Controller
         Mail::to(env('MAIL_ADMIN'))->queue(new ContactEnquiry($con));
 
         return response()->json(['status' => true,"message"=>"Thank you for getting in touch. Our team will contact you shortly.","data" => []],200);
+    }
+
+    public function news(Request $request){
+        $limit = $request->limit ? $request->limit : 9;
+        $offset = $request->offset ? $request->offset : 0;
+        $lang       = $request->has('lang') ? (($request->lang == 'ar') ? 'ae' : $request->lang) : 'en';
+
+        if($lang == 'ae'){
+            $select= ['id', 'slug', 'ar_title as title', 'ar_content as content', 'image', 'blog_date', 'seo_title', 'seo_description', 'og_title', 'og_description', 'twitter_title', 'twitter_description', 'keywords', 'meta_image'];
+        }else{
+            $select = ['id', 'slug', 'title', 'content', 'image', 'blog_date', 'seo_title', 'seo_description', 'og_title', 'og_description', 'twitter_title', 'twitter_description', 'keywords', 'meta_image'];
+        }
+
+        $newsQuery = Blog::where('status',1)->orderBy('blog_date','desc')->select($select);
+        
+        $total_count = $newsQuery->count();
+        $news = $newsQuery->skip($offset)->take($limit)->get();
+
+        if($news){
+            foreach($news as $new){
+                $new->image = ($new->image != NULL) ? uploaded_asset($new->image) : '';
+            }
+        }
+
+
+        $next_offset = $offset + $limit;
+
+        $meta = PageTranslation::leftJoin('pages as p','p.id', '=' ,'page_translations.page_id')
+                                    ->where('lang', $lang)
+                                    ->where('p.type', 'news')
+                                    ->select('page_translations.title', 'page_translations.meta_title', 'page_translations.meta_description', 'page_translations.keywords', 'page_translations.og_title', 'page_translations.og_description', 'page_translations.twitter_title', 'page_translations.twitter_description', 'page_translations.meta_image')
+                                    ->first();
+      
+        if($meta){
+            $meta->meta_image       = ($meta->meta_image != NULL) ? uploaded_asset($meta->meta_image) : '';
+        }
+        return response()->json(['status' => true,"message"=>"Success","data" => $news, "total_count" => $total_count, "next_offset" => $next_offset,"page_data" => $meta],200);
+    }
+
+    public function blogDetails(Request $request){
+        $slug = $request->has('slug') ? $request->slug : null;
+        if($slug != null){
+            $newsQuery = Blog::where('slug', $slug)
+                                ->where('status',1)
+                                ->select('id','title', 'slug', 'description', 'blog_date', 'status', 'seo_title', 'og_title', 'twitter_title', 'seo_description', 'og_description', 'twitter_description', 'keywords',DB::raw("CONCAT('".url('/')."', image) AS image"))
+                                ->orderBy('blog_date','desc')
+                                ->first();
+            return response()->json(['success' => true,"message"=>"Success","data" => $newsQuery],200);
+        }else{
+            return response()->json(['success' => false,"message"=>"No data","data" => []],200);
+        }
     }
 }
