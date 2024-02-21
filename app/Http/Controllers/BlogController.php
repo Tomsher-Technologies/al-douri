@@ -133,9 +133,8 @@ class BlogController extends Controller
     {
         $blog = Blog::find($request->id);
         $blog->delete();
-        return redirect()->route('news.index')->with([
-            'status' => "Blog Deleted"
-        ]);
+        flash(translate('News deleted successfully'))->success();
+        return redirect()->route('news.index');
     }
 
     public function change_status(Request $request){

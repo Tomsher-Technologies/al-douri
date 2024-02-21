@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ApiAuthController;
+use App\Http\Controllers\Api\WebsiteController;
 use App\Http\Controllers\Api\V2\AddressController;
 
 Route::group(['middleware' => 'api','prefix' => 'auth'], function () {
@@ -42,6 +43,16 @@ Route::group(['middleware' => 'api','prefix' => 'auth'], function () {
         Route::post('delete-address', [AddressController::class, 'deleteAddress'])->name('delete-address');
     });
 
+    Route::group(['prefix' => 'website'], function () {
+        // Route::get('header', [WebsiteController::class, 'websiteHeader']);
+        // Route::get('home', [WebsiteController::class, 'websiteHome']);
+        // Route::get('categories', [WebsiteController::class, 'websiteCategories']);
+        
+        // Route::get('footer', [WebsiteController::class, 'websiteFooter']);
+        Route::get('store-locator', [WebsiteController::class, 'storeLocations']);
+        Route::get('page-contents', [WebsiteController::class, 'pageContents']);
+        Route::post('contact-us', [WebsiteController::class, 'contactUs']);
+    });
 });
 
 Route::fallback(function () {

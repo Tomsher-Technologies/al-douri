@@ -17,7 +17,8 @@ class WebsiteController extends Controller
 	}
 	public function pages(Request $request)
 	{
-		return view('backend.website_settings.pages.index');
+		$pages = \App\Models\Page::orderBy('slug', 'asc')->get();
+		return view('backend.website_settings.pages.index', compact('pages'));
 	}
 	public function appearance(Request $request)
 	{

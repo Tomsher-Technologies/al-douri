@@ -41,6 +41,7 @@ use App\Http\Controllers\StaffController;
 use App\Http\Controllers\StateController;
 use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\WebsiteController;
+use App\Http\Controllers\FaqController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/test', function () {
@@ -223,6 +224,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::resource('news', BlogController::class);
     Route::get('/news/destroy/{id}', [BlogController::class,'destroy'])->name('news.destroy');
     Route::post('/news/change-status', [BlogController::class,'change_status'])->name('news.change-status');
+
+    Route::resource('faq', FaqController::class);
+    Route::get('/faq/destroy/{id}', [FaqController::class,'destroy'])->name('faq.destroy');
+    Route::post('/faq/change-status', [FaqController::class,'change_status'])->name('faq.change-status');
 
     //Coupons
     Route::resource('coupon', CouponController::class);

@@ -88,10 +88,12 @@ class PageController extends Controller
         if($page != null){
           if ($id == 'home') {
             return view('backend.website_settings.pages.home_page_edit', compact('page','lang'));
-          }else if ($id == 'find_us' || $id == 'news') {
+          }else if ($id == 'find_us' || $id == 'news' || $id == 'faq') {
             return view('backend.website_settings.pages.find_us', compact('page','lang'));
           }else if ($id == 'contact_us') {
             return view('backend.website_settings.pages.contact_us', compact('page','lang'));
+          }else if ($id == 'about_us') {
+            return view('backend.website_settings.pages.about_us', compact('page','lang'));
           }else{
             return view('backend.website_settings.pages.edit', compact('page','lang'));
           }
@@ -115,8 +117,11 @@ class PageController extends Controller
             $page_translation->content              = $request->has('content') ? $request->content : NULL;
             $page_translation->sub_title            = $request->has('sub_title') ? $request->sub_title : NULL;
             $page_translation->heading1             = $request->has('heading1') ? $request->heading1 : NULL;
+            $page_translation->content1             = $request->has('content1') ? $request->content1 : NULL;
             $page_translation->heading2             = $request->has('heading2') ? $request->heading2 : NULL;
+            $page_translation->content2             = $request->has('content2') ? $request->content2 : NULL;
             $page_translation->heading3             = $request->has('heading3') ? $request->heading3 : NULL;
+            $page_translation->content3             = $request->has('content3') ? $request->content3 : NULL;
             $page_translation->heading4             = $request->has('heading4') ? $request->heading4 : NULL;
             $page_translation->meta_title           = $request->meta_title;
             $page_translation->meta_description     = $request->meta_description;
@@ -126,6 +131,7 @@ class PageController extends Controller
             $page_translation->twitter_description  = $request->twitter_description;
             $page_translation->keywords             = $request->keywords;
             $page_translation->meta_image           = $request->meta_image;
+            $page_translation->image1               = $request->has('image1') ? $request->image1 : NULL;
             $page_translation->save();
 
             flash(translate('Page data has been updated successfully'))->success();
