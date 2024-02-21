@@ -20,7 +20,7 @@
             <tr>
                 <th >#</th>
                 <th>{{translate('Name')}}</th>
-                <th class="text-right">{{translate('Actions')}}</th>
+                <th class="text-center">{{translate('Actions')}}</th>
             </tr>
         </thead>
         <tbody>
@@ -32,7 +32,7 @@
 					{{ $page->slug }}
 				</td>
 				
-        		<td class="text-right">
+        		<td class="text-center">
 					@if($page->type == 'home')
 						<a href="{{route('custom-pages.edit', ['id'=>$page->type, 'lang'=>env('DEFAULT_LANGUAGE'), 'page'=>'home'] )}}" class="btn btn-icon btn-circle btn-sm btn-soft-primary" title="Edit">
 							<i class="las la-pen"></i>
