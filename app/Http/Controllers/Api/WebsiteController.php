@@ -106,6 +106,7 @@ class WebsiteController extends Controller
         if($meta){
             $meta->meta_image       = ($meta->meta_image != NULL) ? uploaded_asset($meta->meta_image) : '';
         }
+        $meta = ($meta) ? $meta : [];
         return response()->json(['status' => true,"message"=>"Success","data" => $shops,"page_data" => $meta],200);
     }
 
@@ -157,7 +158,7 @@ class WebsiteController extends Controller
             if($page_type == 'faq'){
                 $pageData['faqs'] = $faqs;
             }
-            
+            $pageData = ($pageData) ? $pageData : [];
             return response()->json(['status' => true,"message"=>"Success","data" => $pageData],200);
         }else{
             return response()->json(['status' => false,"message"=>"No data found","data" => []],200);
@@ -240,17 +241,29 @@ class WebsiteController extends Controller
         if($meta){
             $meta->meta_image       = ($meta->meta_image != NULL) ? uploaded_asset($meta->meta_image) : '';
         }
+
+        $meta = ($meta) ? $meta : [];
+        $news = ($news) ? $news : [];
         return response()->json(['status' => true,"message"=>"Success","data" => $news, "total_count" => $total_count, "next_offset" => $next_offset,"page_data" => $meta],200);
     }
 
-    public function blogDetails(Request $request){
+    public function newsDetails(Request $request){
         $slug = $request->has('slug') ? $request->slug : null;
+        $lang       = $request->has('lang') ? (($request->lang == 'ar') ? 'ae' : $request->lang) : 'en';
+
+        if($lang == 'ae'){
+            $select= ['id', 'slug', 'ar_title as title', 'ar_content as content', 'image', 'blog_date', 'seo_title', 'seo_description', 'og_title', 'og_description', 'twitter_title', 'twitter_description', 'keywords', 'meta_image'];
+        }else{
+            $select = ['id', 'slug', 'title', 'content', 'image', 'blog_date', 'seo_title', 'seo_description', 'og_title', 'og_description', 'twitter_title', 'twitter_description', 'keywords', 'meta_image'];
+        }
+        
         if($slug != null){
             $newsQuery = Blog::where('slug', $slug)
                                 ->where('status',1)
-                                ->select('id','title', 'slug', 'description', 'blog_date', 'status', 'seo_title', 'og_title', 'twitter_title', 'seo_description', 'og_description', 'twitter_description', 'keywords',DB::raw("CONCAT('".url('/')."', image) AS image"))
+                                ->select($select)
                                 ->orderBy('blog_date','desc')
                                 ->first();
+            $newsQuery = ($newsQuery) ? $newsQuery : [];
             return response()->json(['success' => true,"message"=>"Success","data" => $newsQuery],200);
         }else{
             return response()->json(['success' => false,"message"=>"No data","data" => []],200);
