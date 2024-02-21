@@ -53,7 +53,7 @@ Route::group(['middleware' => 'api','prefix' => 'auth'], function () {
         Route::get('page-contents', [WebsiteController::class, 'pageContents']);
         Route::post('contact-us', [WebsiteController::class, 'contactUs']);
         Route::get('news', [WebsiteController::class, 'news']);
-        Route::get('blog-details', [WebsiteController::class, 'blogDetails']);
+        Route::get('news-details', [WebsiteController::class, 'newsDetails']);
     });
 });
 
