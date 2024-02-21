@@ -9,8 +9,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Favicon -->
-  	<title>{{ config('app.name', 'eCommerce') }}</title>
-
+    <link rel="icon" type="image/svg" href="{{ asset('assets/img/favicon.ico') }}">
+	<title>{{ env('APP_URL') }}</title>
     <!-- google font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700">
 
