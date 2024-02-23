@@ -263,6 +263,9 @@ class WebsiteController extends Controller
                                 ->select($select)
                                 ->orderBy('blog_date','desc')
                                 ->first();
+            if($newsQuery){
+                $newsQuery->image = ($newsQuery->image != NULL) ? uploaded_asset($newsQuery->image) : '';
+            }
             $newsQuery = ($newsQuery) ? $newsQuery : [];
             return response()->json(['success' => true,"message"=>"Success","data" => $newsQuery],200);
         }else{
