@@ -56,7 +56,7 @@
                               </td>
                           @elseif ($info->type == 'file')
                               <td>
-                                  <a href="{{ my_asset($info->value) }}" target="_blank" class="btn-info">{{translate('Click here')}}</a>
+                                  <a href="{{ storage_asset($info->value) }}" target="_blank" class="btn-info">{{translate('Click here')}}</a>
                               </td>
                           @endif
                       </tr>

@@ -7,6 +7,7 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
     });
 };
 
+
 const togglePassword = $('.passwordToggle');
 
 togglePassword.on('click', function (e) {
@@ -28,6 +29,7 @@ togglePassword.on('click', function (e) {
     AIZ.data = {
         csrf: $('meta[name="csrf-token"]').attr("content"),
         appUrl: $('meta[name="app-url"]').attr("content"),
+        adminUrl: $('meta[name="admin-url"]').attr("content"),
         fileBaseUrl: $('meta[name="file-base-url"]').attr("content"),
     };
     AIZ.uploader = {
@@ -100,7 +102,7 @@ togglePassword.on('click', function (e) {
                                 ];
                             $.ajax({
                                 url:
-                                    AIZ.data.appUrl +
+                                    AIZ.data.adminUrl +
                                     "/aiz-uploader/destroy/" +
                                     AIZ.uploader.data.clickedForDelete,
                                 type: "DELETE",
@@ -129,7 +131,7 @@ togglePassword.on('click', function (e) {
                                     );
                                     AIZ.uploader.updateUploaderSelected();
                                     AIZ.uploader.getAllUploads(
-                                        AIZ.data.appUrl +
+                                        AIZ.data.adminUrl +
                                         "/aiz-uploader/get_uploaded_files"
                                     );
                                     AIZ.uploader.data.clickedForDelete = null;
@@ -290,7 +292,7 @@ togglePassword.on('click', function (e) {
                     //     ].aria_hidden = false;
                     // }
                     AIZ.uploader.getAllUploads(
-                        AIZ.data.appUrl + "/aiz-uploader/get_uploaded_files"
+                        AIZ.data.adminUrl + "/aiz-uploader/get_uploaded_files"
                     );
                 }
                 AIZ.uploader.updateUploaderFiles();
@@ -300,7 +302,7 @@ togglePassword.on('click', function (e) {
             $('[name="aiz-uploader-search"]').on("keyup", function () {
                 var value = $(this).val();
                 AIZ.uploader.getAllUploads(
-                    AIZ.data.appUrl + "/aiz-uploader/get_uploaded_files",
+                    AIZ.data.adminUrl + "/aiz-uploader/get_uploaded_files",
                     value,
                     $('[name="aiz-uploader-sort"]').val()
                 );
@@ -334,7 +336,7 @@ togglePassword.on('click', function (e) {
             $('[name="aiz-uploader-sort"]').on("change", function () {
                 var value = $(this).val();
                 AIZ.uploader.getAllUploads(
-                    AIZ.data.appUrl + "/aiz-uploader/get_uploaded_files",
+                    AIZ.data.adminUrl + "/aiz-uploader/get_uploaded_files",
                     $('[name="aiz-uploader-search"]').val(),
                     value
                 );
@@ -408,6 +410,8 @@ togglePassword.on('click', function (e) {
 
             setTimeout(function () {
                 $(".aiz-uploader-all").html(null);
+
+                // console.log(data);
 
                 if (data.length > 0) {
                     for (var i = 0; i < data.length; i++) {
@@ -492,7 +496,7 @@ togglePassword.on('click', function (e) {
             if (AIZ.uploader.data.selectedFiles.length > 0) {
 
                 $.post(
-                    AIZ.data.appUrl + "/aiz-uploader/get_file_by_ids",
+                    AIZ.data.adminUrl + "/aiz-uploader/get_file_by_ids",
                     { _token: AIZ.data.csrf, ids: AIZ.uploader.data.selectedFiles.toString() },
                     function (data) {
 
@@ -684,14 +688,14 @@ togglePassword.on('click', function (e) {
 
             // setTimeout(function() {
             $.post(
-                AIZ.data.appUrl + "/aiz-uploader",
+                AIZ.data.adminUrl + "/aiz-uploader",
                 { _token: AIZ.data.csrf },
                 function (data) {
                     $("body").append(data);
                     $("#aizUploaderModal").modal("show");
                     AIZ.plugins.aizUppy();
                     AIZ.uploader.getAllUploads(
-                        AIZ.data.appUrl + "/aiz-uploader/get_uploaded_files",
+                        AIZ.data.adminUrl + "/aiz-uploader/get_uploaded_files",
                         null,
                         $('[name="aiz-uploader-sort"]').val()
                     );
@@ -775,7 +779,7 @@ togglePassword.on('click', function (e) {
                 var files = $this.find(".selected-files").val();
                 if (files != "") {
                     $.post(
-                        AIZ.data.appUrl + "/aiz-uploader/get_file_by_ids",
+                        AIZ.data.adminUrl + "/aiz-uploader/get_file_by_ids",
                         { _token: AIZ.data.csrf, ids: files },
                         function (data) {
 
@@ -910,8 +914,6 @@ togglePassword.on('click', function (e) {
                 var placeholder = $this.attr("placeholder");
                 var format = $this.data("format");
 
-                var status = $this.prop('disabled');
-
                 buttons = !buttons
                     ? [
                         ["font", ["bold", "underline", "italic", "clear"]],
@@ -944,10 +946,6 @@ togglePassword.on('click', function (e) {
                         }
                     }
                 });
-
-                if (status) {
-                    $this.summernote('disable');
-                }
 
                 var nativeHtmlBuilderFunc = $this.summernote('module', 'videoDialog').createVideoNode;
 
@@ -1163,7 +1161,7 @@ togglePassword.on('click', function (e) {
                     }
                 });
                 uppy.use(Uppy.XHRUpload, {
-                    endpoint: AIZ.data.appUrl + "/aiz-uploader/upload",
+                    endpoint: AIZ.data.adminUrl + "/aiz-uploader/upload",
                     fieldName: "aiz_file",
                     formData: true,
                     headers: {
@@ -1172,7 +1170,7 @@ togglePassword.on('click', function (e) {
                 });
                 uppy.on("upload-success", function () {
                     AIZ.uploader.getAllUploads(
-                        AIZ.data.appUrl + "/aiz-uploader/get_uploaded_files"
+                        AIZ.data.adminUrl + "/aiz-uploader/get_uploaded_files"
                     );
                 });
             }
@@ -1676,11 +1674,13 @@ togglePassword.on('click', function (e) {
                 var $this = $(this);
                 var content = $this.data("content");
                 var target = $this.data("target");
-
+                var max = $this.data("max") ?? 100;
                 $this.on("click", function (e) {
                     e.preventDefault();
-                    $(target).append(content);
-                    AIZ.plugins.bootstrapSelect();
+                    if ($(target).children().length <= max) {
+                        $(target).append(content);
+                        AIZ.plugins.bootstrapSelect();
+                    }
                 });
             });
         },

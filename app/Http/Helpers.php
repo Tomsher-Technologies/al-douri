@@ -630,8 +630,11 @@ if (!function_exists('storage_asset')) {
 if (!function_exists('uploaded_asset')) {
     function uploaded_asset($id)
     {
-        if (($asset = \App\Models\Upload::find($id)) != null) {
-            return $asset->external_link == null ? my_asset($asset->file_name) : $asset->external_link;
+        // if (($asset = \App\Models\Upload::find($id)) != null) {
+        //     return $asset->external_link == null ? my_asset($asset->file_name) : $asset->external_link;
+        // }
+        if ($id && ($asset = \App\Models\Upload::find($id)) != null) {
+            return $asset->external_link == null ? storage_asset($asset->file_name) : $asset->external_link;
         }
         return null;
     }
@@ -692,9 +695,10 @@ if (!function_exists('getFileBaseURL')) {
     function getFileBaseURL()
     {
         if (env('FILESYSTEM_DRIVER') == 's3') {
-            return env('AWS_URL');
+            return env('AWS_URL') . '/';
         } else {
-            return getBaseURL();
+            return app('url')->asset('storage') . '/';
+            // return getBaseURL();
         }
     }
 }
