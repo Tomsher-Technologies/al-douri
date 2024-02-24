@@ -288,6 +288,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::resource('/uploaded-files', AizUploadController::class);
     Route::get('/uploaded-files/destroy/{id}', [AizUploadController::class, 'destroy'])->name('uploaded-files.destroy');
 
+    Route::post('/aiz-uploader', [AizUploadController::class, 'show_uploader']);
+    Route::post('/aiz-uploader/upload', [AizUploadController::class, 'upload']);
+    Route::get('/aiz-uploader/get_uploaded_files', [AizUploadController::class, 'get_uploaded_files']);
+    Route::post('/aiz-uploader/get_file_by_ids', [AizUploadController::class, 'get_preview_files']);
+    Route::get('/aiz-uploader/download/{id}', [AizUploadController::class, 'attachment_download'])->name('download_attachment');
+
     Route::get('/all-notification', [NotificationController::class, 'index'])->name('admin.all-notification');
 
     Route::get('/cache-cache', [AdminController::class, 'clearCache'])->name('cache.clear');
